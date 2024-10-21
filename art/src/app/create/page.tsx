@@ -1,6 +1,6 @@
 "use client";
 import { useState, useContext } from 'react';
-import { GlobalContext, PostType, ArtForm } from '../layout';
+import { GlobalContext, ArtFormMap } from '../layout';
 import { useRouter } from 'next/navigation';
 import { defaultArtForm } from '../layout';
 
@@ -19,7 +19,7 @@ export default function CreatePost() {
 
     return (
         <div className="container mx-auto p-4">
-
+            {ArtFormMap[inProgressPost.artform.type](inProgressPost.artform.parameters)}
         </div>
     );
 }

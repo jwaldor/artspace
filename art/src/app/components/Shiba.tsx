@@ -23,7 +23,7 @@ export function MeshComponent() {
     );
 }
 
-export function Shiba({ props }: { props: ShibaParameters }) {
+export function Shiba(props: ShibaParameters) {
     console.log("Shiba");
     return <Canvas>
         <MeshComponent />
