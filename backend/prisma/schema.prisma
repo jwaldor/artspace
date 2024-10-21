@@ -12,8 +12,7 @@ datasource db {
 
 // Define your models here
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int      @id @default(autoincrement()) @unique
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
