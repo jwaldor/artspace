@@ -16,8 +16,11 @@ const geistMono = localFont({
 });
 
 
+type GlobalContextType = { posts: PostType[] }
 
-export const GlobalContext = createContext({});
+const initialApplicationState: GlobalContextType = { posts: [] }
+
+export const GlobalContext = createContext<GlobalContextType>(initialApplicationState)
 
 export type ShibaParameters = { fog: number }
 export type ArtForm = { type: "Shiba"; parameters: ShibaParameters }

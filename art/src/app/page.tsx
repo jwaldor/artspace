@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useContext } from "react";
 import { GlobalContext } from "./layout";
 import { PostType } from "./layout";
 import { Shiba } from "./components/Shiba";
-import { ArtForm } from "./layout";
 
 
 function Post({ post }: { post: PostType }) {
