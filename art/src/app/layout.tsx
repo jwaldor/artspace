@@ -23,7 +23,11 @@ const initialApplicationState: GlobalContextType = { posts: [] }
 export const GlobalContext = createContext<GlobalContextType>(initialApplicationState)
 
 export type ShibaParameters = { fog: number }
-export type ArtForm = { type: "Shiba"; parameters: ShibaParameters }
+
+export type ArtForms = "Shiba"
+export const defaultArtForm: ArtForms = "Shiba"
+
+export type ArtForm = { type: ArtForms; parameters: ShibaParameters }
 
 export type PostType = {
   id: string;
