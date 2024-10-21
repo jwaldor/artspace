@@ -3,6 +3,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useState } from "react";
+import { Shiba } from "./components/Shiba";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,6 +27,11 @@ export type ShibaParameters = { fog: number }
 
 export type ArtForms = "Shiba"
 export const defaultArtForm: ArtForms = "Shiba"
+
+
+export const ArtFormMap = {
+  "Shiba": Shiba
+}
 
 export type ArtForm = { type: ArtForms; parameters: ShibaParameters }
 
