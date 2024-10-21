@@ -1,0 +1,28 @@
+{
+  "app/page.jsx -> @/components/canvas/Examples": {
+    "id": "app/page.jsx -> @/components/canvas/Examples",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_canvas_Examples_jsx.js"
+    ]
+  },
+  "app/page.jsx -> @/components/canvas/View": {
+    "id": "app/page.jsx -> @/components/canvas/View",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_canvas_View_jsx.js"
+    ]
+  },
+  "node_modules/@react-three/drei/core/VideoTexture.js -> hls.js": {
+    "id": "node_modules/@react-three/drei/core/VideoTexture.js -> hls.js",
+    "files": []
+  },
+  "node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision": {
+    "id": "node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision",
+    "files": []
+  },
+  "src/components/dom/Layout.jsx -> @/components/canvas/Scene": {
+    "id": "src/components/dom/Layout.jsx -> @/components/canvas/Scene",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_canvas_Scene_jsx.js"
+    ]
+  }
+}

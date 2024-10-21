@@ -19,6 +19,8 @@ const geistMono = localFont({
 
 export const GlobalContext = createContext({});
 
+export type ShibaParameters = { fog: number }
+export type ArtForm = { type: "Shiba"; parameters: ShibaParameters }
 
 export type PostType = {
   id: string;
@@ -26,8 +28,7 @@ export type PostType = {
   likes: number;
   updatedAt: Date;
   creator: string;
-  artform: string;
-  parameters: object;
+  artform: ArtForm;
 };
 
 
@@ -36,7 +37,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [posts, setPosts] = useState<PostType[]>([{ id: "1", name: "Post 1", likes: 0, updatedAt: new Date(), creator: "User 1", artform: "Painting", parameters: { width: 100, height: 100 } }]);
+  const [posts, setPosts] = useState<PostType[]>([{ id: "1", name: "Post 1", likes: 0, updatedAt: new Date(), creator: "User 1", artform: { type: "Shiba", parameters: { fog: 1 } }, }]);
   return (
     <html lang="en">
       <GlobalContext.Provider value={{ posts }}>
