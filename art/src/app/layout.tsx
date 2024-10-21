@@ -3,6 +3,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useState } from "react";
+import { Shiba } from "./components/Shiba";
+import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,23 +18,9 @@ const geistMono = localFont({
 });
 
 
-type GlobalContextType = { posts: PostType[] }
+type GlobalContextType = { posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
 
-const initialApplicationState: GlobalContextType = { posts: [] }
-
-export const GlobalContext = createContext<GlobalContextType>(initialApplicationState)
-
-export type ShibaParameters = { fog: number }
-export type ArtForm = { type: "Shiba"; parameters: ShibaParameters }
-
-export type PostType = {
-  id: string;
-  name: string;
-  likes: number;
-  updatedAt: Date;
-  creator: string;
-  artform: ArtForm;
-};
+export const GlobalContext = createContext<GlobalContextType>({ posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
 
 
 export default function RootLayout({
@@ -40,10 +28,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [posts, setPosts] = useState<PostType[]>([{ id: "1", name: "Post 1", likes: 0, updatedAt: new Date(), creator: "User 1", artform: { type: "Shiba", parameters: { fog: 1 } }, }]);
+  const [posts, setPosts] = useState<PostType[]>(initialPosts);
+  const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialInProgressPost);
   return (
     <html lang="en">
-      <GlobalContext.Provider value={{ posts }}>
+      <GlobalContext.Provider value={{ posts, inProgressPost, setInProgressPost }}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
