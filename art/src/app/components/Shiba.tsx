@@ -23,7 +23,7 @@ export function MeshComponent() {
     );
 }
 
-export function Shiba({ fog }: ShibaParameters) {
+export function Shiba({ props }: { props: ShibaParameters }) {
     console.log("Shiba");
     return <Canvas>
         <MeshComponent />
@@ -31,6 +31,7 @@ export function Shiba({ fog }: ShibaParameters) {
         <pointLight position={[10, 10, 10]} />
         <OrbitControls />
         <directionalLight position={[5, 5, 5]} intensity={1} />
-        <fog attach="fog" args={['#f0f0f0', 0, fog]} />
+        <fog attach="fog" args={['#f0f0f0', 0, props.fog]} />
     </Canvas>
 }
+
