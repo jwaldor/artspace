@@ -16,9 +16,9 @@ const geistMono = localFont({
 });
 
 
-type GlobalContextType = { posts: PostType[] }
+type GlobalContextType = { posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
 
-const initialApplicationState: GlobalContextType = { posts: [] }
+const initialApplicationState: GlobalContextType = { posts: [], inProgressPost: { name: "", artform: { type: "Shiba", parameters: { fog: 20 } } }, setInProgressPost: () => { } }
 
 export const GlobalContext = createContext<GlobalContextType>(initialApplicationState)
 
@@ -38,6 +38,11 @@ export type PostType = {
   artform: ArtForm;
 };
 
+export type InProgressPostType = {
+  name: string;
+  artform: ArtForm
+}
+
 
 export default function RootLayout({
   children,
@@ -45,9 +50,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [posts, setPosts] = useState<PostType[]>([{ id: "1", name: "Post 1", likes: 0, updatedAt: new Date(), creator: "User 1", artform: { type: "Shiba", parameters: { fog: 1 } }, }]);
+  const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialApplicationState.inProgressPost);
   return (
     <html lang="en">
-      <GlobalContext.Provider value={{ posts }}>
+      <GlobalContext.Provider value={{ posts, inProgressPost, setInProgressPost }}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >

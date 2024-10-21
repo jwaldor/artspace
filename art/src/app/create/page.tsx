@@ -2,11 +2,11 @@
 import { useState, useContext } from 'react';
 import { GlobalContext, PostType, ArtForm } from '../layout';
 import { useRouter } from 'next/navigation';
-import { ArtForms } from '../layout';
+import { defaultArtForm } from '../layout';
 
 export default function CreatePost() {
 
-    const { posts } = useContext(GlobalContext);
+    const { inProgressPost, setInProgressPost } = useContext(GlobalContext);
     const router = useRouter();
 
     const handleSubmit = (e: React.FormEvent) => {
