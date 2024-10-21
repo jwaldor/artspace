@@ -5,6 +5,13 @@ import "./globals.css";
 import { createContext, useState } from "react";
 import { Shiba } from "./components/Shiba";
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,13 +39,18 @@ export default function RootLayout({
   const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialInProgressPost);
   return (
     <html lang="en">
-      <GlobalContext.Provider value={{ posts, inProgressPost, setInProgressPost }}>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </GlobalContext.Provider>
+      <ClerkProvider>
+        <GlobalContext.Provider value={{ posts, inProgressPost, setInProgressPost }}>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+          </body>
+        </GlobalContext.Provider>
+      </ClerkProvider>
     </html>
   );
 }
