@@ -44,33 +44,33 @@ export default function Home() {
     // const auth = getAuth();
     // console.log("Auth State:", auth);
     const artClient = new ArtClient();
-    fetch("http://localhost:5173/").then((res) => {
-      console.log("here")
-      return res.text();
-    }).then((data) => {
-      console.log(data);
-    });
-    getToken().then((res) => {
-      // console.log(res)
-      fetch("http://localhost:5173/createPost", {
-        method: "POST",
-        body: JSON.stringify({ name: "test", artform: { type: "Shiba", parameters: { fog: 0 } } }),
-        headers: {
-          "Authorization": `Bearer ${res}`,
-          "Content-Type": "application/json"
-        }
-      }).then((res) => {
-        console.log("here")
-        return res.text();
-      }).catch((err) => {
-        console.log(err)
-      })
-    });
-
-    // artClient.createPost({ name: "test", artform: { type: "Shiba", parameters: { fog: 0 } } }).then((post) => {
-    //   console.log("created post");
-    //   console.log(post);
+    // fetch("http://localhost:5173/").then((res) => {
+    //   console.log("here")
+    //   return res.text();
+    // }).then((data) => {
+    //   console.log(data);
     // });
+    // getToken().then((res) => {
+    //   // console.log(res)
+    //   fetch("http://localhost:5173/createPost", {
+    //     method: "POST",
+    //     body: JSON.stringify({ name: "test", artform: { type: "Shiba", parameters: { fog: 0 } } }),
+    //     headers: {
+    //       "Authorization": `Bearer ${res}`,
+    //       "Content-Type": "application/json"
+    //     }
+    //   }).then((res) => {
+    //     console.log("here")
+    //     return res.text();
+    //   }).catch((err) => {
+    //     console.log(err)
+    //   })
+    // });
+
+    artClient.createPost({ name: "test", artform: { type: "Shiba", parameters: { fog: 0 } } }).then((post) => {
+      console.log("created post");
+      console.log(post);
+    });
   }, []);
   return (
     <main>

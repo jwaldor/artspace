@@ -17,9 +17,11 @@ class ApiClient {
   ): Promise<T> {
     try {
       console.log(`${this.baseUrl}${endpoint}`);
+      const token = await getToken();
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method,
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: body ? JSON.stringify(body) : undefined,
@@ -102,6 +104,9 @@ export class ArtClient extends ApiClient {
   }
 }
 
+function getToken(): string | PromiseLike<string> {
+  throw new Error("Function not implemented.");
+}
 // Usage example:
 // const artClient = new ArtClient();
 // const posts = await artClient.getPosts();
