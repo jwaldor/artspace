@@ -1,102 +1,132 @@
-// import { z } from "zod";
-// import { PostType, ArtForm } from "./artService";
+import { z } from "zod";
+import { PostType, ArtForm, InProgressPostType } from "./artService";
 
-// // Generic API client
-// class ApiClient {
-//   private baseUrl: string;
+// Generic API client
+class ApiClient {
+  private baseUrl: string;
 
-//   constructor(baseUrl: string) {
-//     this.baseUrl = baseUrl;
-//   }
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
 
-//   private async request<T>(
-//     endpoint: string,
-//     method: "GET" | "POST" | "PUT" | "DELETE",
-//     schema: z.ZodType<T>,
-//     body?: unknown
-//   ): Promise<T> {
-//     try {
-//       const response = await fetch(`${this.baseUrl}${endpoint}`, {
-//         method,
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: body ? JSON.stringify(body) : undefined,
-//       });
+  private async request<T>(
+    endpoint: string,
+    method: "GET" | "POST" | "PUT" | "DELETE",
+    schema: z.ZodType<T>,
+    body?: unknown,
+    token?: string
+  ): Promise<T> {
+    console.log("request", token);
+    try {
+      console.log(`${this.baseUrl}${endpoint}`);
+      console.log("sent", {
+        method,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          "Content-Type": "application/json",
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          "Content-Type": "application/json",
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
 
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//       }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-//       const data = await response.json();
-//       return schema.parse(data);
-//     } catch (error) {
-//       if (error instanceof z.ZodError) {
-//         console.error("Validation error:", error.errors);
-//       } else if (error instanceof Error) {
-//         console.error("Request error:", error.message);
-//       } else {
-//         console.error("Unknown error:", error);
-//       }
-//       throw error;
-//     }
-//   }
+      const data = await response.json();
+      return schema.parse(data);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error("Validation error:", error.errors);
+      } else if (error instanceof Error) {
+        console.error("Request error:", error.message);
+      } else {
+        console.error("Unknown error:", error);
+      }
+      throw error;
+    }
+  }
 
-//   protected get<T>(endpoint: string, schema: z.ZodType<T>): Promise<T> {
-//     return this.request(endpoint, "GET", schema);
-//   }
+  protected get<T>(
+    endpoint: string,
+    schema: z.ZodType<T>,
+    token?: string
+  ): Promise<T> {
+    return this.request(endpoint, "GET", schema, token);
+  }
 
-//   protected post<T>(
-//     endpoint: string,
-//     schema: z.ZodType<T>,
-//     body: unknown
-//   ): Promise<T> {
-//     return this.request(endpoint, "POST", schema, body);
-//   }
-// }
+  protected post<T>(
+    endpoint: string,
+    schema: z.ZodType<T>,
+    body: unknown,
+    token?: string
+  ): Promise<T> {
+    return this.request(endpoint, "POST", schema, body, token);
+  }
+}
 
-// // Art-specific API client
-// export class ArtClient extends ApiClient {
-//   constructor() {
-//     super("https://localhost:3000"); // Replace with your actual API base URL
-//   }
+// Art-specific API client
+export class ArtClient extends ApiClient {
+  constructor() {
+    super("http://localhost:5173"); // Replace with your actual API base URL
+  }
 
-//   private postSchema = z.object({
-//     id: z.string(),
-//     name: z.string(),
-//     likes: z.number(),
-//     updatedAt: z.string().transform((str) => new Date(str)),
-//     creator: z.string(),
-//     artform: z.object({
-//       type: z.literal("Shiba"),
-//       parameters: z.object({
-//         fog: z.number(),
-//       }),
-//     }),
-//   });
+  private postSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    likes: z.number(),
+    updatedAt: z.coerce.date(),
+    creator: z.string(),
+    artform: z.object({
+      type: z.literal("Shiba"),
+      parameters: z.object({
+        fog: z.number(),
+      }),
+    }),
+  });
 
-//   private postsSchema = z.array(this.postSchema);
+  //   private inProgressPostSchema = z.object({
+  //     name: z.string(),
+  //     artform: z.object({
+  //       type: z.literal("Shiba"),
+  //       parameters: z.object({
+  //         fog: z.number(),
+  //       }),
+  //     }),
+  //   });
 
-//   async getPosts(): Promise<PostType[]> {
-//     return this.get("/posts", this.postsSchema);
-//   }
+  private postsSchema = z.array(this.postSchema);
 
-//   async createPost(
-//     post: Omit<PostType, "id" | "likes" | "updatedAt">
-//   ): Promise<PostType> {
-//     return this.post("/posts", this.postSchema, post);
-//   }
+  async getPosts(): Promise<PostType[]> {
+    return this.get("/posts", this.postsSchema);
+  }
 
-//   async getPost(id: string): Promise<PostType> {
-//     return this.get(`/posts/${id}`, this.postSchema);
-//   }
-// }
+  async createPost(
+    post: InProgressPostType,
+    token?: string
+  ): Promise<PostType> {
+    console.log("createPost", post);
+    console.log("token", token);
+    return this.post("/createPost", this.postSchema, post, token);
+  }
 
-// // Usage example:
-// // const artClient = new ArtClient();
-// // const posts = await artClient.getPosts();
-// // const newPost = await artClient.createPost({
-// //   name: 'New Post',
-// //   creator: 'User',
-// //   artform: { type: 'Shiba', parameters: { fog: 10 } },
-// // });
+  async getPost(id: string): Promise<PostType> {
+    return this.get(`/posts/${id}`, this.postSchema);
+  }
+}
+
+// Usage example:
+// const artClient = new ArtClient();
+// const posts = await artClient.getPosts();
+// const newPost = await artClient.createPost({
+//   name: 'New Post',
+//   creator: 'User',
+//   artform: { type: 'Shiba', parameters: { fog: 10 } },
+// });

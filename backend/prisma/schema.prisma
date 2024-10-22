@@ -12,8 +12,7 @@ datasource db {
 
 // Define your models here
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        String      @id @unique
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -27,9 +26,8 @@ model ArtPiece {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   createdBy User     @relation(fields: [createdById], references: [id])
-  createdById Int
-  form        ArtForm  @relation(fields: [formId], references: [id])
-  formId      Int
+  createdById String
+  form        String
   parameters Json
   likes Like[]
 }
@@ -41,14 +39,5 @@ model Like {
   artPiece ArtPiece @relation(fields: [artPieceId], references: [id])
   artPieceId Int
   user User @relation(fields: [userId], references: [id])
-  userId Int
-}
-
-model ArtForm {
-  id        Int      @id @default(autoincrement())
-  name      String
-  parameterSchema Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  artPieces ArtPiece[]
+  userId String
 }

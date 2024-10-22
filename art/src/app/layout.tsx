@@ -4,7 +4,16 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useState } from "react";
 import { Shiba } from "./components/Shiba";
+import { ArtClient } from "../services/artClient";
+
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,9 +27,9 @@ const geistMono = localFont({
 });
 
 
-type GlobalContextType = { posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
+type GlobalContextType = { client: ArtClient, posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
 
-export const GlobalContext = createContext<GlobalContextType>({ posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
+export const GlobalContext = createContext<GlobalContextType>({ client: new ArtClient(), posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
 
 
 export default function RootLayout({
@@ -32,13 +41,18 @@ export default function RootLayout({
   const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialInProgressPost);
   return (
     <html lang="en">
-      <GlobalContext.Provider value={{ posts, inProgressPost, setInProgressPost }}>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </GlobalContext.Provider>
+      <ClerkProvider>
+        <GlobalContext.Provider value={{ client: new ArtClient(), posts, inProgressPost, setInProgressPost }}>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+          </body>
+        </GlobalContext.Provider>
+      </ClerkProvider>
     </html>
   );
 }
