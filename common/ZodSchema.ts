@@ -13,3 +13,6 @@ export const postSchema = z.object({
     }),
   }),
 });
+
+
+type PostType = z.infer<typeof postSchema>;
