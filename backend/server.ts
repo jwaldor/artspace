@@ -86,8 +86,6 @@ app.post(
   "/createPost",
   authAndUserMiddleware,
   async (req: UserRequest, res) => {
-    console.log("createPost", req.body);
-    console.log("Request Body:", req.body);
     const { name, artform } = req.body;
     console.log("name, parameters, artform", name, artform);
     const user = req.user;
@@ -111,8 +109,26 @@ app.get("/users", async (req, res) => {
 });
 
 app.get("/allPosts", async (req, res) => {
-  const posts = await prisma.artPiece.findMany();
-  res.json(posts);
+  const posts = await prisma.artPiece.findMany({
+    include: {
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+    },
+  });
+  const postsWithLikes = posts.map((post) => ({
+    ...post,
+    likes: post._count.likes,
+    artform: {
+      type: post.form,
+      parameters: JSON.parse(String(post.parameters)),
+    },
+  }));
+  console.log(posts[0].parameters);
+  console.log(postsWithLikes);
+  res.json(postsWithLikes);
   return;
 });
 

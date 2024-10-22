@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { PostType, ArtForm, InProgressPostType } from "./artService";
+import { PostType, InProgressPostType } from "./artService";
+// import { postSchema } from "../../../common/ZodSchema";
 
 // Generic API client
 class ApiClient {
@@ -79,17 +80,25 @@ export class ArtClient extends ApiClient {
   }
 
   private postSchema = z.object({
-    id: z.string(),
+    id: z.number(),
     name: z.string(),
     likes: z.number(),
     updatedAt: z.coerce.date(),
-    creator: z.string(),
-    artform: z.object({
-      type: z.literal("Shiba"),
-      parameters: z.object({
-        fog: z.number(),
+    createdById: z.string(),
+    artform: z.union([
+      z.object({
+        type: z.literal("Shiba"),
+        parameters: z.object({
+          fog: z.number(),
+        }),
       }),
-    }),
+      z.object({
+        type: z.literal("Other"),
+        parameters: z.object({
+          other: z.number(),
+        }),
+      }),
+    ]),
   });
 
   //   private inProgressPostSchema = z.object({
