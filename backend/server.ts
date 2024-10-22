@@ -26,6 +26,7 @@ const authAndUserMiddleware = [
     res: express.Response,
     next: express.NextFunction
   ) => {
+    console.log("authAndUserMiddleware");
     const auth = getAuth(req);
     const clerkUser = auth.userId;
     if (!clerkUser) {
@@ -39,6 +40,10 @@ const authAndUserMiddleware = [
   },
 ];
 // Define a new middleware function
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 app.post(
   "/createPost",
@@ -63,7 +68,7 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5173;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

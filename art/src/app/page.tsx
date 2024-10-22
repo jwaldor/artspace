@@ -1,10 +1,11 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { GlobalContext } from "./layout";
 import { PostType } from "./layout";
 import { Shiba } from "./components/Shiba";
 import { getArtFormComponent } from "./components/Post";
+import { ArtClient } from "../services/artClient";
 
 
 function Post({ post_index }: { post_index: number }) {
@@ -35,6 +36,13 @@ function PostCreator() {
 
 export default function Home() {
   const { posts } = useContext(GlobalContext);
+  useEffect(() => {
+    const artClient = new ArtClient();
+    artClient.createPost({ name: "test", artform: { type: "Shiba", parameters: { fog: 0 } } }).then((post) => {
+      console.log("created post");
+      console.log(post);
+    });
+  }, []);
   return (
     <main>
       <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
