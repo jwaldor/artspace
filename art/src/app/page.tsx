@@ -38,8 +38,13 @@ function PostCreator() {
 }
 
 export default function Home() {
-  const { posts } = useContext(GlobalContext);
+  const { posts, client } = useContext(GlobalContext);
   const { getToken } = useAuth();
+  useEffect(() => {
+    client.getPosts().then((posts) => {
+      console.log("allposts", posts);
+    });
+  }, []);
   // useEffect(() => {
   //   // const auth = getAuth();
   //   // console.log("Auth State:", auth);
