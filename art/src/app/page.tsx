@@ -15,11 +15,16 @@ function Post({ post_index }: { post_index: number }) {
   const { posts } = useContext(GlobalContext);
   const post = posts[post_index];
 
-  return <>
-    <div className="flex border border-gray-300 rounded-md p-4 w-[75%]">{post.name} {post.likes} {post.updatedAt.toLocaleDateString()} {post.artform.type} {JSON.stringify(post.artform.parameters)}</div>
-    {getArtFormComponent(post.artform)}
-
-  </>;
+  return (
+    <div className="w-[75%]">
+      <div className="flex border border-gray-300 rounded-md p-4">
+        {post.name} {post.likes} {post.updatedAt.toLocaleDateString()} {post.artform.type} {JSON.stringify(post.artform.parameters)}
+      </div>
+      <div style={{ height: '400px' }}> {/* Add fixed height */}
+        {getArtFormComponent(post.artform)}
+      </div>
+    </div>
+  );
 }
 
 function CreatePost() {
@@ -40,11 +45,7 @@ function PostCreator() {
 export default function Home() {
   const { posts, client } = useContext(GlobalContext);
   const { getToken } = useAuth();
-  useEffect(() => {
-    client.getPosts().then((posts) => {
-      console.log("allposts", posts);
-    });
-  }, []);
+
   // useEffect(() => {
   //   // const auth = getAuth();
   //   // console.log("Auth State:", auth);
