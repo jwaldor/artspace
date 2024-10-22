@@ -7,10 +7,12 @@ import { updateParameters } from '@/services/artService';
 
 
 import { getArtFormComponent } from '../components/Post';
+import { useAuth } from '@clerk/nextjs';
 
 export default function CreatePost() {
 
-    const { inProgressPost, setInProgressPost } = useContext(GlobalContext);
+    const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
+    const { getToken } = useAuth();
     const params = useControls('Art Form Parameters', inProgressPost.artform.parameters);
     const router = useRouter();
 
@@ -27,9 +29,15 @@ export default function CreatePost() {
 
 
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        const token = await getToken();
+        console.log("firsttoken", token);
+        console.log("calling createPost");
+        client.createPost(inProgressPost, token ?? undefined).then((post) => {
+            console.log("created post");
+            console.log(post);
+        });
         // Here you would typically send this data to your backend
         // For now, we'll just log it and redirect
         router.push('/');
@@ -38,7 +46,7 @@ export default function CreatePost() {
     return (
         <div className="container mx-auto p-4">
             {getArtFormComponent(inProgressPost.artform)}
-            <button className="flex rounded-md p-4 hover:bg-blue-100">Create</button>
+            <button className="flex rounded-md p-4 hover:bg-blue-100" onClick={handleSubmit}>Create</button>
         </div>
     );
 }

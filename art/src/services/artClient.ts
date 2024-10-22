@@ -13,15 +13,24 @@ class ApiClient {
     endpoint: string,
     method: "GET" | "POST" | "PUT" | "DELETE",
     schema: z.ZodType<T>,
-    body?: unknown
+    body?: unknown,
+    token?: string
   ): Promise<T> {
+    console.log("request", token);
     try {
       console.log(`${this.baseUrl}${endpoint}`);
-      const token = await getToken();
+      console.log("sent", {
+        method,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          "Content-Type": "application/json",
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method,
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
           "Content-Type": "application/json",
         },
         body: body ? JSON.stringify(body) : undefined,
@@ -45,23 +54,28 @@ class ApiClient {
     }
   }
 
-  protected get<T>(endpoint: string, schema: z.ZodType<T>): Promise<T> {
-    return this.request(endpoint, "GET", schema);
+  protected get<T>(
+    endpoint: string,
+    schema: z.ZodType<T>,
+    token?: string
+  ): Promise<T> {
+    return this.request(endpoint, "GET", schema, token);
   }
 
   protected post<T>(
     endpoint: string,
     schema: z.ZodType<T>,
-    body: unknown
+    body: unknown,
+    token?: string
   ): Promise<T> {
-    return this.request(endpoint, "POST", schema, body);
+    return this.request(endpoint, "POST", schema, body, token);
   }
 }
 
 // Art-specific API client
 export class ArtClient extends ApiClient {
   constructor() {
-    super("https://localhost:5173"); // Replace with your actual API base URL
+    super("http://localhost:5173"); // Replace with your actual API base URL
   }
 
   private postSchema = z.object({
@@ -94,9 +108,13 @@ export class ArtClient extends ApiClient {
     return this.get("/posts", this.postsSchema);
   }
 
-  async createPost(post: InProgressPostType): Promise<PostType> {
+  async createPost(
+    post: InProgressPostType,
+    token?: string
+  ): Promise<PostType> {
     console.log("createPost", post);
-    return this.post("/createPost", this.postSchema, post);
+    console.log("token", token);
+    return this.post("/createPost", this.postSchema, post, token);
   }
 
   async getPost(id: string): Promise<PostType> {
@@ -104,9 +122,6 @@ export class ArtClient extends ApiClient {
   }
 }
 
-function getToken(): string | PromiseLike<string> {
-  throw new Error("Function not implemented.");
-}
 // Usage example:
 // const artClient = new ArtClient();
 // const posts = await artClient.getPosts();
