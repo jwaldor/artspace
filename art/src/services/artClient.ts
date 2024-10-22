@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { PostType, InProgressPostType } from "./artService";
-import { postSchema } from "./artService";
+import { postSchema, newPostSchema } from "./artService";
 // import { postSchema } from "../../../common/ZodSchema";
 
 // Generic API client
@@ -81,6 +81,7 @@ export class ArtClient extends ApiClient {
   }
 
   private postSchema = postSchema;
+  private newPostSchema = newPostSchema;
 
   //   private inProgressPostSchema = z.object({
   //     name: z.string(),

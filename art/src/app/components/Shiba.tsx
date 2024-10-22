@@ -15,14 +15,14 @@ useGLTF.preload(SHIBA_MESH_URL);
 
 export function ShibaMesh() {
     const mesh = useRef<Mesh>(null!);
-    const gltf = useLoader(GLTFLoader, SHIBA_MESH_URL);
+    const { scene } = useGLTF("/shiba/scene.gltf");
     useFrame(() => {
         mesh.current.rotation.y += 0.01;
     });
 
     return (
         <mesh ref={mesh}>
-            <primitive object={gltf.scene} />
+            <primitive object={scene} />
         </mesh>
     );
 }

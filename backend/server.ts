@@ -97,7 +97,7 @@ app.post(
         createdBy: { connect: { id: user.id } },
       },
     });
-    res.json(post);
+    res.status(200);
     return;
   }
 );

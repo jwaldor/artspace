@@ -13,10 +13,7 @@ export type PostType = z.infer<typeof postSchema>;
 export type ArtFormType = PostType["artform"]["type"];
 export type ArtFormParameters = PostType["artform"]["parameters"];
 
-export type InProgressPostType = {
-  name: string;
-  artform: ArtForm;
-};
+export type InProgressPostType = z.infer<typeof newPostSchema>;
 
 export const postSchema = z.object({
   id: z.number(),
@@ -38,6 +35,10 @@ export const postSchema = z.object({
       }),
     }),
   ]),
+});
+
+export const newPostSchema = z.object({
+  artform: postSchema.shape.artform,
 });
 
 // getters
@@ -66,7 +67,7 @@ async function getNewPosts() {
 
 export const initialPosts: PostType[] = [
   {
-    id: "1",
+    id: 0,
     name: "Post 1",
     likes: 0,
     updatedAt: new Date(),
