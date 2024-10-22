@@ -38,6 +38,7 @@ export default function CreatePost() {
     return (
         <div className="container mx-auto p-4">
             {getArtFormComponent(inProgressPost.artform)}
+            <button className="flex rounded-md p-4 hover:bg-blue-100">Create</button>
         </div>
     );
 }
