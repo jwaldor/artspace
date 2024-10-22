@@ -105,7 +105,7 @@ export class ArtClient extends ApiClient {
   private postsSchema = z.array(this.postSchema);
 
   async getPosts(): Promise<PostType[]> {
-    return this.get("/posts", this.postsSchema);
+    return this.get("/allPosts", this.postsSchema);
   }
 
   async createPost(
