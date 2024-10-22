@@ -79,6 +79,7 @@ const authAndUserMiddleware = [
 app.get("/", (req, res) => {
   console.log("get");
   res.send("Hello World");
+  return;
 });
 
 app.post(
@@ -99,12 +100,20 @@ app.post(
       },
     });
     res.json(post);
+    return;
   }
 );
 
 app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany();
   res.json(users);
+  return;
+});
+
+app.get("/allPosts", async (req, res) => {
+  const posts = await prisma.artPiece.findMany();
+  res.json(posts);
+  return;
 });
 
 const PORT = process.env.PORT || 5173;
