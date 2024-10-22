@@ -93,6 +93,7 @@ export class ArtClient extends ApiClient {
   }
 
   async createPost(post: InProgressPostType): Promise<PostType> {
+    console.log("createPost", post);
     return this.post("/createPost", this.postSchema, post);
   }
 
