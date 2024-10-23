@@ -63,12 +63,47 @@ export function ConwayMesh() {
 
     return (
         <>
-            {grid.map((row, i) => row.map((cell, j) => (
-                <mesh ref={mesh} position={[i - 7, j - 7, !cell ? 0 : countNeighbors(i, j, grid)]} key={`${i}-${j}`} >
-                    <boxGeometry args={[1, 1, 1]} />
-                    <meshStandardMaterial color={cell ? "hotpink" : "black"} />
-                </mesh>
-            )))}
+            {grid.map((row, i) => row.map((cell, j) => {
+                const neighbors = countNeighbors(i, j, grid);
+                let color = "hotpink";
+                switch (neighbors) {
+                    case 0:
+                        color = "red";
+                        break;
+                    case 1:
+                        color = "orange";
+                        break;
+                    case 2:
+                        color = "yellow";
+                        break;
+                    case 3:
+                        color = "green";
+                        break;
+                    case 4:
+                        color = "blue";
+                        break;
+                    case 5:
+                        color = "purple";
+                        break;
+                    case 6:
+                        color = "pink";
+                        break;
+                    case 7:
+                        color = "white";
+                        break;
+                    case 7:
+                        color = "brown";
+                        break;
+                    default:
+                        color = "hotpink";
+                }
+                return (
+                    <mesh ref={mesh} position={[i - 7, j - 7, !cell ? 0 : neighbors]} key={`${i}-${j}`} >
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color={color} />
+                    </mesh>
+                );
+            }))}
 
         </>
     );
