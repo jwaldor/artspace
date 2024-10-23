@@ -65,37 +65,37 @@ export function ConwayMesh() {
         <>
             {grid.map((row, i) => row.map((cell, j) => {
                 const neighbors = countNeighbors(i, j, grid);
-                let color = "hotpink";
+                let color = "#8B4513"; // Default brown
                 switch (neighbors) {
                     case 0:
-                        color = "red";
+                        color = "#654321"; // Dark brown
                         break;
                     case 1:
-                        color = "orange";
+                        color = "#8B7355"; // Light brown
                         break;
                     case 2:
-                        color = "yellow";
+                        color = "#A0522D"; // Sienna brown
                         break;
                     case 3:
-                        color = "green";
+                        color = "#87CEEB"; // Sky blue
                         break;
                     case 4:
-                        color = "blue";
+                        color = "#4682B4"; // Steel blue
                         break;
                     case 5:
-                        color = "purple";
+                        color = "#2E4C1F"; // Dark forest green
                         break;
                     case 6:
-                        color = "pink";
+                        color = "#3E885B"; // Medium sea green
                         break;
                     case 7:
-                        color = "white";
+                        color = "#4FB477"; // Light green
                         break;
-                    case 7:
-                        color = "brown";
+                    case 8:
+                        color = "#71B48D"; // Sage green
                         break;
                     default:
-                        color = "hotpink";
+                        color = "#8B4513"; // Saddle brown
                 }
                 return (
                     <mesh ref={mesh} position={[i - 7, j - 7, 0]} key={`${i}-${j}`} >
@@ -108,7 +108,7 @@ export function ConwayMesh() {
                 return (<>
                     {cell && <mesh ref={mesh} position={[i - 7, j - 7, 0]} key={`${i}-${j}`} >
                         <boxGeometry args={[1, 1, 1]} />
-                        <meshStandardMaterial color={"red"} />
+                        <meshStandardMaterial color={"#2E4C1F"} />
                     </mesh>}
                 </>
                 );
