@@ -104,7 +104,15 @@ export function ConwayMesh() {
                     </mesh>
                 );
             }))}
-
+            {grid.map((row, i) => row.map((cell, j) => {
+                return (<>
+                    {cell && <mesh ref={mesh} position={[i - 7, j - 7, 0]} key={`${i}-${j}`} >
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color={"red"} />
+                    </mesh>}
+                </>
+                );
+            }))}
         </>
     );
 }

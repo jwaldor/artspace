@@ -83,6 +83,8 @@ export default function Home() {
         ))} */}
         Conway
         <Conway />
+        <Conway />
+
         <Shiba fog={10} />
         {/* <div>Hello</div> */}
         <Shiba fog={10} />
