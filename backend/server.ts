@@ -40,10 +40,6 @@ app.use(clerkMiddleware());
 
 const dbService = DBService();
 
-interface UserRequest extends Request {
-  user: User;
-}
-
 const authAndUserMiddleware = [
   (req, res, next) => {
     console.log("Request:", {
@@ -79,32 +75,53 @@ const authAndUserMiddleware = [
 app.get("/", (req, res) => {
   console.log("get");
   res.send("Hello World");
+  return;
 });
 
-app.post(
-  "/createPost",
-  authAndUserMiddleware,
-  async (req: UserRequest, res) => {
-    console.log("createPost", req.body);
-    console.log("Request Body:", req.body);
-    const { name, artform } = req.body;
-    console.log("name, parameters, artform", name, artform);
-    const user = req.user;
-    const post = await prisma.artPiece.create({
-      data: {
-        name,
-        parameters: JSON.stringify(artform.parameters),
-        form: artform.type,
-        createdBy: { connect: { id: user.id } },
-      },
-    });
-    res.json(post);
-  }
-);
+app.post("/createPost", authAndUserMiddleware, async (req, res) => {
+  const { name, artform } = req.body;
+  console.log("name, parameters, artform", name, artform);
+  const user = req.user;
+  const post = await prisma.artPiece.create({
+    data: {
+      name,
+      parameters: JSON.stringify(artform.parameters),
+      form: artform.type,
+      createdBy: { connect: { id: user.id } },
+    },
+  });
+  res.status(200);
+  return;
+});
 
 app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany();
   res.json(users);
+  return;
+});
+
+app.get("/allPosts", async (req, res) => {
+  const posts = await prisma.artPiece.findMany({
+    include: {
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+    },
+  });
+  const postsWithLikes = posts.map((post) => ({
+    ...post,
+    likes: post._count.likes,
+    artform: {
+      type: post.form,
+      parameters: JSON.parse(String(post.parameters)),
+    },
+  }));
+  console.log(posts[0].parameters);
+  console.log(postsWithLikes);
+  res.json(postsWithLikes);
+  return;
 });
 
 const PORT = process.env.PORT || 5173;

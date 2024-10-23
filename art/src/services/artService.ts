@@ -1,30 +1,45 @@
 import { ArtClient } from "./artClient";
+import { z } from "zod";
 
 export type ShibaParameters = { fog: number };
 
 export type ArtForms = "Shiba";
 export const defaultArtForm: ArtForms = "Shiba";
 
-export type ArtForm =
-  | { type: "Shiba"; parameters: ShibaParameters }
-  | { type: "Other"; parameters: { other: number } };
+export type ArtForm = z.infer<typeof postSchema>["artform"];
 
-export type PostType = {
-  id: string;
-  name: string;
-  likes: number;
-  updatedAt: Date;
-  creator: string;
-  artform: ArtForm;
-};
+export type PostType = z.infer<typeof postSchema>;
 
 export type ArtFormType = PostType["artform"]["type"];
 export type ArtFormParameters = PostType["artform"]["parameters"];
 
-export type InProgressPostType = {
-  name: string;
-  artform: ArtForm;
-};
+export type InProgressPostType = z.infer<typeof newPostSchema>;
+
+export const postSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  likes: z.number(),
+  updatedAt: z.coerce.date(),
+  createdById: z.string(),
+  artform: z.union([
+    z.object({
+      type: z.literal("Shiba"),
+      parameters: z.object({
+        fog: z.number(),
+      }),
+    }),
+    z.object({
+      type: z.literal("Other"),
+      parameters: z.object({
+        other: z.number(),
+      }),
+    }),
+  ]),
+});
+
+export const newPostSchema = z.object({
+  artform: postSchema.shape.artform,
+});
 
 // getters
 // setters
@@ -52,11 +67,11 @@ async function getNewPosts() {
 
 export const initialPosts: PostType[] = [
   {
-    id: "1",
+    id: 0,
     name: "Post 1",
     likes: 0,
     updatedAt: new Date(),
-    creator: "User 1",
+    createdById: "User 1",
     artform: { type: "Shiba", parameters: { fog: 1 } },
   },
 ];

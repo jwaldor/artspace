@@ -2,17 +2,14 @@
 "use client";
 import localFont from "next/font/local";
 import "./globals.css";
-import { createContext, useState } from "react";
-import { Shiba } from "./components/Shiba";
+import { createContext, useEffect, useState } from "react";
 import { ArtClient } from "../services/artClient";
 
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
 import {
   ClerkProvider,
   SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton
 } from '@clerk/nextjs'
 
 const geistSans = localFont({
@@ -39,6 +36,13 @@ export default function RootLayout({
 }>) {
   const [posts, setPosts] = useState<PostType[]>(initialPosts);
   const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialInProgressPost);
+  useEffect(() => {
+    new ArtClient().getPosts().then((posts) => {
+      console.log("allposts", posts);
+      setPosts(posts);
+
+    });
+  }, []);
   return (
     <html lang="en">
       <ClerkProvider>

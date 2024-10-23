@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { PostType, ArtForm, InProgressPostType } from "./artService";
+import { PostType, InProgressPostType } from "./artService";
+import { postSchema, newPostSchema } from "./artService";
+// import { postSchema } from "../../../common/ZodSchema";
 
 // Generic API client
 class ApiClient {
@@ -78,19 +80,8 @@ export class ArtClient extends ApiClient {
     super("http://localhost:5173"); // Replace with your actual API base URL
   }
 
-  private postSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    likes: z.number(),
-    updatedAt: z.coerce.date(),
-    creator: z.string(),
-    artform: z.object({
-      type: z.literal("Shiba"),
-      parameters: z.object({
-        fog: z.number(),
-      }),
-    }),
-  });
+  private postSchema = postSchema;
+  private newPostSchema = newPostSchema;
 
   //   private inProgressPostSchema = z.object({
   //     name: z.string(),
@@ -105,7 +96,7 @@ export class ArtClient extends ApiClient {
   private postsSchema = z.array(this.postSchema);
 
   async getPosts(): Promise<PostType[]> {
-    return this.get("/posts", this.postsSchema);
+    return this.get("/allPosts", this.postsSchema);
   }
 
   async createPost(
