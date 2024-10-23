@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Mesh } from "three";
+import { conwayEngine } from "@/app/lib/renderengines";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
 
