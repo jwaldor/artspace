@@ -9,6 +9,7 @@ import { ArtClient } from "../services/artClient";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useAuth } from '@clerk/nextjs'
 import Post from "./components/Post";
+import { Conway } from "./components/artforms/Conway";
 
 
 
@@ -80,6 +81,8 @@ export default function Home() {
         {/* {posts.map((post, index) => (
           <Post key={post.id} post={post} />
         ))} */}
+        Conway
+        <Conway />
         <Shiba fog={10} />
         {/* <div>Hello</div> */}
         <Shiba fog={10} />
