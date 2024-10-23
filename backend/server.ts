@@ -40,10 +40,6 @@ app.use(clerkMiddleware());
 
 const dbService = DBService();
 
-interface UserRequest extends Request {
-  user: User;
-}
-
 const authAndUserMiddleware = [
   (req, res, next) => {
     console.log("Request:", {
@@ -82,25 +78,21 @@ app.get("/", (req, res) => {
   return;
 });
 
-app.post(
-  "/createPost",
-  authAndUserMiddleware,
-  async (req: UserRequest, res) => {
-    const { name, artform } = req.body;
-    console.log("name, parameters, artform", name, artform);
-    const user = req.user;
-    const post = await prisma.artPiece.create({
-      data: {
-        name,
-        parameters: JSON.stringify(artform.parameters),
-        form: artform.type,
-        createdBy: { connect: { id: user.id } },
-      },
-    });
-    res.status(200);
-    return;
-  }
-);
+app.post("/createPost", authAndUserMiddleware, async (req, res) => {
+  const { name, artform } = req.body;
+  console.log("name, parameters, artform", name, artform);
+  const user = req.user;
+  const post = await prisma.artPiece.create({
+    data: {
+      name,
+      parameters: JSON.stringify(artform.parameters),
+      form: artform.type,
+      createdBy: { connect: { id: user.id } },
+    },
+  });
+  res.status(200);
+  return;
+});
 
 app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany();
