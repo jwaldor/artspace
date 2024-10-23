@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Mesh } from "three";
-import { conwayEngine } from "@/app/lib/renderengines";
+import { conwayEngine, countNeighbors } from "@/app/lib/renderengines";
 import { OrbitControls } from "@react-three/drei";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
@@ -12,16 +12,46 @@ import { OrbitControls } from "@react-three/drei";
 
 // const NISSAN_MESH_URL = "/1978-nissan-skyline/1978 Nissan Skyline.zip";
 
+// Pulsar pattern initial state
+const pulsar = [
+    [false, false, true, true, true, false, false, false, true, true, true, false, false],
+    [false, false, false, false, false, false, false, false, false, false, false, false, false],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [false, false, true, true, true, false, false, false, true, true, true, false, false],
+    [false, false, false, false, false, false, false, false, false, false, false, false, false],
+    [false, false, true, true, true, false, false, false, true, true, true, false, false],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [true, false, false, false, false, true, false, true, false, false, false, false, true],
+    [false, false, false, false, false, false, false, false, false, false, false, false, false],
+    [false, false, true, true, true, false, false, false, true, true, true, false, false]
+];
+
+// Helper to create initial grid with pulsar
+const createPulsarGrid = (size: number = 15): boolean[][] => {
+    const grid = Array(size).fill(false).map(() => Array(size).fill(false));
+    const offset = Math.floor((size - pulsar.length) / 2);
+
+    for (let i = 0; i < pulsar.length; i++) {
+        for (let j = 0; j < pulsar[0].length; j++) {
+            grid[i + offset][j + offset] = pulsar[i][j];
+        }
+    }
+    return grid;
+};
+
 
 
 export function ConwayMesh() {
     const mesh = useRef<Mesh>(null!);
-    const [grid, setGrid] = useState<boolean[][]>(Array(15).fill(false).map(() => Array(15).fill(false).map(() => Math.random() > 0.5)));
+    const [grid, setGrid] = useState<boolean[][]>(pulsar);
     const updateGrid = () => {
         setGrid((grid) => { console.log("grid", grid); return conwayEngine(grid) });
         setTimeout(() => {
             updateGrid();
-        }, 1000);
+        }, 3000);
     }
     useEffect(() => {
         updateGrid();
@@ -34,11 +64,12 @@ export function ConwayMesh() {
     return (
         <>
             {grid.map((row, i) => row.map((cell, j) => (
-                <mesh ref={mesh} position={[i - 7, j - 7, 0]} key={`${i}-${j}`} >
+                <mesh ref={mesh} position={[i - 7, j - 7, !cell ? 0 : countNeighbors(i, j, grid)]} key={`${i}-${j}`} >
                     <boxGeometry args={[1, 1, 1]} />
                     <meshStandardMaterial color={cell ? "hotpink" : "black"} />
                 </mesh>
             )))}
+
         </>
     );
 }
@@ -48,7 +79,7 @@ export function Conway() {
         <Canvas style={{ height: '48rem', width: '100%' }}>
             <ambientLight />
             <pointLight position={[15, 15, 15]} />
-            <OrbitControls makeDefault position={[40, 30, 30]} />
+            <OrbitControls makeDefault position={[0, 0, 0]} />
             <directionalLight position={[5, 5, 5]} intensity={1} />
             <ConwayMesh />
         </Canvas>
