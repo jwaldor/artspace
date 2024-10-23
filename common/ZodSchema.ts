@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { apiBuilder, makeApi } from "@zodios/core";
 
 export const postSchema = z.object({
   id: z.number(),
@@ -26,3 +27,16 @@ export const postSchema = z.object({
 export const newPostSchema = z.object({
   artform: postSchema.shape.artform,
 });
+
+export const postApi = makeApi([
+  {
+    method: "get",
+    path: "/allPosts",
+    response: z.array(postSchema),
+  },
+  {
+    method: "get",
+    path: "/createPost",
+    response: newPostSchema,
+  },
+]);
