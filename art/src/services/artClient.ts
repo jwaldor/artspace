@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { PostType, InProgressPostType } from "./artService";
-import { postSchema, newPostSchema } from "./artService";
-// import { postSchema } from "../../../common/ZodSchema";
+import { postSchema, newPostSchema } from "../../../common/ZodSchema";
 
 // Generic API client
 class ApiClient {

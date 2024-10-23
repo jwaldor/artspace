@@ -1,6 +1,7 @@
-import { ArtClient } from "./artClient";
+import { postSchema, newPostSchema } from "../../../common/ZodSchema";
 import { z } from "zod";
 
+console.log(postSchema.shape, newPostSchema.shape);
 export type ShibaParameters = { fog: number };
 
 export type ArtForms = "Shiba";
@@ -15,31 +16,32 @@ export type ArtFormParameters = PostType["artform"]["parameters"];
 
 export type InProgressPostType = z.infer<typeof newPostSchema>;
 
-export const postSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  likes: z.number(),
-  updatedAt: z.coerce.date(),
-  createdById: z.string(),
-  artform: z.union([
-    z.object({
-      type: z.literal("Shiba"),
-      parameters: z.object({
-        fog: z.number(),
-      }),
-    }),
-    z.object({
-      type: z.literal("Other"),
-      parameters: z.object({
-        other: z.number(),
-      }),
-    }),
-  ]),
-});
+// export const postSchema = z.object({
+//   id: z.number(),
+//   name: z.string(),
+//   likes: z.number(),
+//   updatedAt: z.coerce.date(),
+//   createdById: z.string(),
+//   // createdByName: z.string(),
+//   artform: z.union([
+//     z.object({
+//       type: z.literal("Shiba"),
+//       parameters: z.object({
+//         fog: z.number(),
+//       }),
+//     }),
+//     z.object({
+//       type: z.literal("Other"),
+//       parameters: z.object({
+//         other: z.number(),
+//       }),
+//     }),
+//   ]),
+// });
 
-export const newPostSchema = z.object({
-  artform: postSchema.shape.artform,
-});
+// export const newPostSchema = z.object({
+//   artform: postSchema.shape.artform,
+// });
 
 // getters
 // setters
@@ -59,11 +61,11 @@ export function updateParameters<T extends ArtForm>(
   };
 }
 
-async function getNewPosts() {
-  const artClient = new ArtClient();
-  const newPosts = await artClient.getPosts(); // this is a side effect, because it's a network call
-  return newPosts;
-}
+// async function getNewPosts() {
+//   const artClient = new ArtClient();
+//   const newPosts = await artClient.getPosts(); // this is a side effect, because it's a network call
+//   return newPosts;
+// }
 
 export const initialPosts: PostType[] = [
   {
@@ -72,11 +74,11 @@ export const initialPosts: PostType[] = [
     likes: 0,
     updatedAt: new Date(),
     createdById: "User 1",
+    // createdByName: "User 1",
     artform: { type: "Shiba", parameters: { fog: 1 } },
   },
 ];
 
 export const initialInProgressPost: InProgressPostType = {
-  name: "",
   artform: { type: "Shiba", parameters: { fog: 20 } },
 };

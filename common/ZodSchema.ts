@@ -1,18 +1,28 @@
 import { z } from "zod";
 
 export const postSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   name: z.string(),
   likes: z.number(),
   updatedAt: z.coerce.date(),
-  creator: z.string(),
-  artform: z.object({
-    type: z.literal("Shiba"),
-    parameters: z.object({
-      fog: z.number(),
+  createdById: z.string(),
+  // createdByName: z.string(),
+  artform: z.union([
+    z.object({
+      type: z.literal("Shiba"),
+      parameters: z.object({
+        fog: z.number(),
+      }),
     }),
-  }),
+    z.object({
+      type: z.literal("Other"),
+      parameters: z.object({
+        other: z.number(),
+      }),
+    }),
+  ]),
 });
 
-
-type PostType = z.infer<typeof postSchema>;
+export const newPostSchema = z.object({
+  artform: postSchema.shape.artform,
+});

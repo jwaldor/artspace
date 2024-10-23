@@ -29,7 +29,7 @@ function Post({ post }: { post: PostType }) {
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="none" stroke="black" style={{ transform: 'translateY(-2px) translateX(1px)' }}>
                         <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                    </svg> <span className="mr-[1px]">{post.likes}</span>
+                    </svg> <span className="mr-[1px]">{post.likes} </span>
                 </div>
             </div>
         </div>
