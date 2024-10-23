@@ -98,8 +98,8 @@ export function ConwayMesh() {
                         color = "hotpink";
                 }
                 return (
-                    <mesh ref={mesh} position={[i - 7, j - 7, !cell ? 0 : neighbors]} key={`${i}-${j}`} >
-                        <boxGeometry args={[1, 1, 1]} />
+                    <mesh ref={mesh} position={[i - 7, j - 7, 0]} key={`${i}-${j}`} >
+                        <boxGeometry args={[1, 1, !cell ? 1 : neighbors + 1]} />
                         <meshStandardMaterial color={color} />
                     </mesh>
                 );
