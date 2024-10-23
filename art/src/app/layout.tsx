@@ -3,7 +3,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useEffect, useState } from "react";
-import { Shiba } from "./components/Shiba";
+import { Shiba } from "./components/artforms/Shiba";
 import { ArtClient } from "../services/artClient";
 
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
@@ -30,6 +30,7 @@ const geistMono = localFont({
 type GlobalContextType = { client: ArtClient, posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
 
 export const GlobalContext = createContext<GlobalContextType>({ client: new ArtClient(), posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
+const SHIBA_MESH_URL = "/shiba/scene.gltf";
 
 
 export default function RootLayout({
@@ -43,6 +44,7 @@ export default function RootLayout({
     new ArtClient().getPosts().then((posts) => {
       console.log("allposts", posts);
       setPosts(posts);
+
     });
   }, []);
   return (

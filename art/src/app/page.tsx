@@ -3,29 +3,15 @@
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "./layout";
 import { PostType } from "./layout";
-import { Shiba } from "./components/Shiba";
+import { Shiba } from "./components/artforms/Shiba";
 import { getArtFormComponent } from "./components/Post";
 import { ArtClient } from "../services/artClient";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useAuth } from '@clerk/nextjs'
+import Post from "./components/Post";
 
 
 
-function Post({ post_index }: { post_index: number }) {
-  const { posts } = useContext(GlobalContext);
-  const post = posts[post_index];
-
-  return (
-    <div className="w-[75%]">
-      <div className="flex border border-gray-300 rounded-md p-4">
-        {post.name} {post.likes} {post.updatedAt.toLocaleDateString()} {post.artform.type} {JSON.stringify(post.artform.parameters)}
-      </div>
-      <div style={{ height: '400px' }}> {/* Add fixed height */}
-        {getArtFormComponent(post.artform)}
-      </div>
-    </div>
-  );
-}
 
 function CreatePost() {
   return <button className="flex rounded-md p-4 hover:bg-blue-100">Create</button>;
@@ -91,9 +77,24 @@ export default function Home() {
         {/* <PostCreator /> */}
         <CreatePost />
 
-        {posts.map((post, index) => (
-          <Post key={post.id} post_index={index} />
-        ))}
+        {/* {posts.map((post, index) => (
+          <Post key={post.id} post={post} />
+        ))} */}
+        <Shiba fog={10} />
+        {/* <div>Hello</div> */}
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+
+
+
+        {/* <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} />
+        <Shiba fog={10} /> */}
       </div>
     </main>
   );
