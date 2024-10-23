@@ -3,16 +3,13 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useEffect, useState } from "react";
-import { Shiba } from "./components/artforms/Shiba";
 import { ArtClient } from "../services/artClient";
 
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
 import {
   ClerkProvider,
   SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton
 } from '@clerk/nextjs'
 
 const geistSans = localFont({
@@ -30,7 +27,6 @@ const geistMono = localFont({
 type GlobalContextType = { client: ArtClient, posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
 
 export const GlobalContext = createContext<GlobalContextType>({ client: new ArtClient(), posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
-const SHIBA_MESH_URL = "/shiba/scene.gltf";
 
 
 export default function RootLayout({
