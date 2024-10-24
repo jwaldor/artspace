@@ -45,3 +45,26 @@ export const postApi = makeApi([
     response: z.string(),
   },
 ]);
+
+// Define a schema for the request headers and body
+// export const authRequestSchema = z.object({
+//   headers: z.object({
+//     authorization: z.string().optional(),
+//   }),
+//   body: z.object({
+//     // Define expected body properties if any
+//   }),
+// });
+
+// // Define a schema for the response
+// export const authResponseSchema = z.object({
+//   status: z.number(),
+//   json: z
+//     .function()
+//     .args(
+//       z.object({
+//         error: z.string().optional(),
+//       })
+//     )
+//     .returns(z.void()),
+// });

@@ -9,6 +9,7 @@ import { postApi } from "../common/ZodSchema";
 import { PostArtformType } from "./express";
 import { z } from "zod";
 import { newPostSchema } from "../common/ZodSchema";
+// import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
 const app = zodiosApp(postApi);
@@ -47,6 +48,13 @@ const dbService = DBService();
 
 const authAndUserMiddleware = [
   (req, res, next) => {
+    // Validate request using authRequestSchema
+    // const parsedRequest = authRequestSchema.safeParse(req);
+    // if (!parsedRequest.success) {
+    //   res.status(400).json({ error: "Invalid request format" });
+    //   return;
+    // }
+
     console.log("Request:", {
       method: req.method,
       url: req.url,
@@ -71,7 +79,12 @@ const authAndUserMiddleware = [
     }
     const user: User | null = await dbService.getUser(clerkUser);
     req.user = user || (await dbService.createUser(clerkUser));
-    // console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    // Validate response using authResponseSchema
+    // const parsedResponse = authResponseSchema.safeParse(res);
+    // if (!parsedResponse.success) {
+    //   res.status(500).json({ error: "Invalid response format" });
+    //   return;
+    // }
     next();
   },
 ];
@@ -89,10 +102,10 @@ type NewPost = z.infer<typeof newPostSchema>;
 app.post("/createPost", authAndUserMiddleware, async (req, res) => {
   // Use the inferred type for the request body
   const { artform }: NewPost = req.body;
-  console.log("name, parameters, artform", name, artform);
+  console.log("name, parameters, artform", artform);
   const user = req.user;
   if (!user) {
-    res.status(401).json({ error: "Unauthorized" } as any);
+    res.status(401).json({ error: "Unauthorized" });
     return;
   }
   const post = await prisma.artPiece.create({

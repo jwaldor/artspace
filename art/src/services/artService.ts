@@ -70,11 +70,9 @@ export function updateParameters<T extends ArtForm>(
 export const initialPosts: PostType[] = [
   {
     id: 0,
-    name: "Post 1",
     likes: 0,
     updatedAt: new Date(),
     createdById: "User 1",
-    // createdByName: "User 1",
     artform: { type: "Shiba", parameters: { fog: 1 } },
   },
 ];
