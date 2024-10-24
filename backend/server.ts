@@ -4,9 +4,15 @@ import { PrismaClient, User } from "@prisma/client";
 import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
+import { zodiosApp } from "@zodios/express";
+import { postApi } from "../common/ZodSchema";
+import { PostArtformType } from "./express";
+import { z } from "zod";
+import { newPostSchema } from "../common/ZodSchema";
+// import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
-const app = express();
+const app = zodiosApp(postApi);
 
 // app.use((req, res, next) => {
 //   console.log(
@@ -42,6 +48,13 @@ const dbService = DBService();
 
 const authAndUserMiddleware = [
   (req, res, next) => {
+    // Validate request using authRequestSchema
+    // const parsedRequest = authRequestSchema.safeParse(req);
+    // if (!parsedRequest.success) {
+    //   res.status(400).json({ error: "Invalid request format" });
+    //   return;
+    // }
+
     console.log("Request:", {
       method: req.method,
       url: req.url,
@@ -66,7 +79,12 @@ const authAndUserMiddleware = [
     }
     const user: User | null = await dbService.getUser(clerkUser);
     req.user = user || (await dbService.createUser(clerkUser));
-    // console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    // Validate response using authResponseSchema
+    // const parsedResponse = authResponseSchema.safeParse(res);
+    // if (!parsedResponse.success) {
+    //   res.status(500).json({ error: "Invalid response format" });
+    //   return;
+    // }
     next();
   },
 ];
@@ -78,13 +96,20 @@ app.get("/", (req, res) => {
   return;
 });
 
+// Define the type from the Zod schema
+type NewPost = z.infer<typeof newPostSchema>;
+
 app.post("/createPost", authAndUserMiddleware, async (req, res) => {
-  const { name, artform } = req.body;
-  console.log("name, parameters, artform", name, artform);
+  // Use the inferred type for the request body
+  const { artform }: NewPost = req.body;
+  console.log("name, parameters, artform", artform);
   const user = req.user;
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
   const post = await prisma.artPiece.create({
     data: {
-      name,
       parameters: JSON.stringify(artform.parameters),
       form: artform.type,
       createdBy: { connect: { id: user.id } },
@@ -94,11 +119,11 @@ app.post("/createPost", authAndUserMiddleware, async (req, res) => {
   return;
 });
 
-app.get("/users", async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-  return;
-});
+// app.get("/users", async (req, res) => {
+//   const users = await prisma.user.findMany();
+//   res.json(users);
+//   return;
+// });
 
 app.get("/allPosts", async (req, res) => {
   const posts = await prisma.artPiece.findMany({
@@ -114,7 +139,7 @@ app.get("/allPosts", async (req, res) => {
     ...post,
     likes: post._count.likes,
     artform: {
-      type: post.form,
+      type: post.form as PostArtformType,
       parameters: JSON.parse(String(post.parameters)),
     },
   }));
