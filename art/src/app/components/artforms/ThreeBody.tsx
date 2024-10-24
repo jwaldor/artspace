@@ -14,21 +14,21 @@ export function ThreeBodyMesh() {
     useEffect(() => {
         function updateCoordinates() {
             setCoordinates(coordinates => threeBodyEngine(coordinates));
-            setInterval(updateCoordinates, 50);
+            setInterval(updateCoordinates, 1000);
         }
         updateCoordinates();
     }, []);
     return (
         <>
-            <mesh position={[0, 0, 5]}>
+            <mesh position={coordinates[0].position}>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" />
             </mesh>
-            <mesh position={[0, 5, 0]}>
+            <mesh position={coordinates[1].position}>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" />
             </mesh>
-            <mesh position={[0, -5, 0]}>
+            <mesh position={coordinates[2].position}>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" />
             </mesh>
