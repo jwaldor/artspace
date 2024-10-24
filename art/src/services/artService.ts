@@ -61,12 +61,6 @@ export function updateParameters<T extends ArtForm>(
   };
 }
 
-// async function getNewPosts() {
-//   const artClient = new ArtClient();
-//   const newPosts = await artClient.getPosts(); // this is a side effect, because it's a network call
-//   return newPosts;
-// }
-
 export const initialPosts: PostType[] = [
   {
     id: 0,
