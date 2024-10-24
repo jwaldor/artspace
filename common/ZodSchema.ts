@@ -40,4 +40,9 @@ export const postApi = makeApi([
     body: newPostSchema,
     response: z.void(),
   },
+  {
+    method: "get",
+    path: "/",
+    response: z.string(),
+  },
 ]);
