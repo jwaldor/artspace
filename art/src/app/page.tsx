@@ -5,6 +5,7 @@ import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
 import { Conway } from "./components/artforms/Conway";
+import { ThreeBody } from "./components/artforms/ThreeBody";
 
 
 
@@ -30,6 +31,7 @@ export default function Home() {
         <h1>Art Space</h1>
         <CreatePost />
         <Conway />
+        <ThreeBody />
 
         {posts.map((post) => (
           <Post key={post.id} post={post} />
