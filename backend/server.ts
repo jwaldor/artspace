@@ -4,9 +4,11 @@ import { PrismaClient, User } from "@prisma/client";
 import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
+import { zodiosApp } from "@zodios/express";
+import { postApi } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
-const app = express();
+const app = zodiosApp(postApi);
 
 // app.use((req, res, next) => {
 //   console.log(

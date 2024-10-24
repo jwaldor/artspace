@@ -35,7 +35,7 @@ export const postApi = makeApi([
     response: z.array(postSchema),
   },
   {
-    method: "get",
+    method: "post",
     path: "/createPost",
     body: newPostSchema,
     response: z.void(),
