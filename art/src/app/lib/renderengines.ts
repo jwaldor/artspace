@@ -44,3 +44,53 @@ export function conwayEngine(grid: boolean[][]): boolean[][] {
 
   return newGrid;
 }
+
+function calculateNewVelocityGravity(
+  position: [number, number, number],
+  velocity: [number, number, number],
+  otherPositions: [[number, number, number], [number, number, number]]
+): [number, number, number][] {
+  const G = 1; // gravitational constant
+  const forces: [number, number, number] = [0, 0, 0];
+
+  for (const otherPosition of otherPositions) {
+    // Calculate distance vector
+    const dx = otherPosition[0] - position[0];
+    const dy = otherPosition[1] - position[1];
+    const dz = otherPosition[2] - position[2];
+
+    // Calculate magnitude of distance
+    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    // Calculate gravitational force magnitude
+    const forceMagnitude = G / (distance * distance);
+
+    // Add force components
+    forces[0] += (forceMagnitude * dx) / distance;
+    forces[1] += (forceMagnitude * dy) / distance;
+    forces[2] += (forceMagnitude * dz) / distance;
+  }
+
+  // Update velocity with forces
+  const newVelocity: [number, number, number] = [
+    velocity[0] + forces[0],
+    velocity[1] + forces[1],
+    velocity[2] + forces[2],
+  ];
+
+  return [newVelocity];
+
+  //return the velocity
+}
+
+function threeBodyEngine(
+  positions: [number, number, number][],
+  velocities: [number, number, number][]
+): [number, number, number][] {
+  // update velocities
+  for (let i = 0; i < positions.length; i++) {
+    velocities[i] = velocities[i].map((v, k) => v + positions[i][k]);
+  }
+
+  return positions;
+}
