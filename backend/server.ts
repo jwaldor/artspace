@@ -88,12 +88,15 @@ type NewPost = z.infer<typeof newPostSchema>;
 
 app.post("/createPost", authAndUserMiddleware, async (req, res) => {
   // Use the inferred type for the request body
-  const { name, artform }: NewPost = req.body;
+  const { artform }: NewPost = req.body;
   console.log("name, parameters, artform", name, artform);
   const user = req.user;
+  if (!user) {
+    res.status(401).json({ error: "Unauthorized" } as any);
+    return;
+  }
   const post = await prisma.artPiece.create({
     data: {
-      name,
       parameters: JSON.stringify(artform.parameters),
       form: artform.type,
       createdBy: { connect: { id: user.id } },
