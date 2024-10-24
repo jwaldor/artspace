@@ -4,10 +4,10 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useState } from "react";
+import { CoordinatesType } from "@/app/lib/renderengines";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
 
-type CoordinatesType = { position: [number, number, number], velocity: [number, number, number] }[]
 
 export function ThreeBodyMesh() {
     const [coordinates, setCoordinates] = useState<CoordinatesType>([{ position: [0, 0, 5], velocity: [0, 0, 0] }, { position: [0, 5, 0], velocity: [0, 0, 0] }, { position: [0, -5, 0], velocity: [0, 0, 0] }]);

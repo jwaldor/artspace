@@ -1,3 +1,8 @@
+export type CoordinatesType = {
+  position: [number, number, number];
+  velocity: [number, number, number];
+}[];
+
 // Helper to count live neighbors
 export const countNeighbors = (
   row: number,
@@ -45,12 +50,14 @@ export function conwayEngine(grid: boolean[][]): boolean[][] {
   return newGrid;
 }
 
+const G = 1; // gravitational constant
+const VELOCITY_FACTOR = 1;
+
 function calculateNewVelocityGravity(
   position: [number, number, number],
   velocity: [number, number, number],
   otherPositions: [[number, number, number], [number, number, number]]
 ): [number, number, number][] {
-  const G = 1; // gravitational constant
   const forces: [number, number, number] = [0, 0, 0];
 
   for (const otherPosition of otherPositions) {
@@ -83,14 +90,31 @@ function calculateNewVelocityGravity(
   //return the velocity
 }
 
-function threeBodyEngine(
-  positions: [number, number, number][],
-  velocities: [number, number, number][]
-): [number, number, number][] {
-  // update velocities
-  for (let i = 0; i < positions.length; i++) {
-    velocities[i] = velocities[i].map((v, k) => v + positions[i][k]);
+export function threeBodyEngine(coordinates: CoordinatesType): CoordinatesType {
+  // update velocities: loop through each coordinate and calculate the new velocity
+  const dupcoordinates = structuredClone(coordinates);
+  for (let i = 0; i < dupcoordinates.length; i++) {
+    const otherPositions: [[number, number, number], [number, number, number]] =
+      [
+        dupcoordinates[(i + 1) % 3].position,
+        dupcoordinates[(i + 2) % 3].position,
+      ];
+    dupcoordinates[i].velocity = calculateNewVelocityGravity(
+      dupcoordinates[i].position,
+      dupcoordinates[i].velocity,
+      otherPositions
+    )[0];
   }
-
-  return positions;
+  // Update positions based on velocities
+  for (let i = 0; i < dupcoordinates.length; i++) {
+    dupcoordinates[i].position = [
+      dupcoordinates[i].position[0] +
+        dupcoordinates[i].velocity[0] * VELOCITY_FACTOR,
+      dupcoordinates[i].position[1] +
+        dupcoordinates[i].velocity[1] * VELOCITY_FACTOR,
+      dupcoordinates[i].position[2] +
+        dupcoordinates[i].velocity[2] * VELOCITY_FACTOR,
+    ];
+  }
+  return dupcoordinates;
 }
