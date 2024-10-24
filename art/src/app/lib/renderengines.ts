@@ -50,8 +50,9 @@ export function conwayEngine(grid: boolean[][]): boolean[][] {
   return newGrid;
 }
 
-const G = 1; // gravitational constant
-const VELOCITY_FACTOR = 1;
+const G = 0.00001; // gravitational constant
+const VELOCITY_FACTOR = 1000;
+const KS_FACTOR = 0.05;
 
 function calculateNewVelocityGravity(
   position: [number, number, number],
@@ -70,7 +71,8 @@ function calculateNewVelocityGravity(
     const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
     // Calculate gravitational force magnitude
-    const forceMagnitude = G / (distance * distance);
+    // Apply KS regularization to avoid singularities at small distances
+    const forceMagnitude = G / (distance * distance + KS_FACTOR);
 
     // Add force components
     forces[0] += (forceMagnitude * dx) / distance;

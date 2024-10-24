@@ -3,20 +3,24 @@
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CoordinatesType } from "@/app/lib/renderengines";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { threeBodyEngine } from "@/app/lib/renderengines";
 
 
 export function ThreeBodyMesh() {
-    const [coordinates, setCoordinates] = useState<CoordinatesType>([{ position: [0, 0, 5], velocity: [0, 0, 0] }, { position: [0, 5, 0], velocity: [0, 0, 0] }, { position: [0, -5, 0], velocity: [0, 0, 0] }]);
+    const [coordinates, setCoordinates] = useState<CoordinatesType>([{ position: [0, 0, 10], velocity: [0, 0, 0] }, { position: [10, 0, -2], velocity: [0, 0, 0] }, { position: [0, -10, 6], velocity: [0, 0, 0] }]);
+    const effectRan = useRef(false);
     useEffect(() => {
+        if (effectRan.current) return;
         function updateCoordinates() {
             setCoordinates(coordinates => threeBodyEngine(coordinates));
-            setInterval(updateCoordinates, 1000);
+            console.log("updating coordinates");
+            setTimeout(updateCoordinates, 50);
         }
         updateCoordinates();
+        effectRan.current = true;
     }, []);
     return (
         <>
