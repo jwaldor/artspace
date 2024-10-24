@@ -6,6 +6,7 @@ import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
 import { zodiosApp } from "@zodios/express";
 import { postApi } from "../common/ZodSchema";
+import { PostArtformType } from "./express";
 
 const prisma = new PrismaClient();
 const app = zodiosApp(postApi);
@@ -96,11 +97,11 @@ app.post("/createPost", authAndUserMiddleware, async (req, res) => {
   return;
 });
 
-app.get("/users", async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-  return;
-});
+// app.get("/users", async (req, res) => {
+//   const users = await prisma.user.findMany();
+//   res.json(users);
+//   return;
+// });
 
 app.get("/allPosts", async (req, res) => {
   const posts = await prisma.artPiece.findMany({
@@ -116,7 +117,7 @@ app.get("/allPosts", async (req, res) => {
     ...post,
     likes: post._count.likes,
     artform: {
-      type: post.form,
+      type: post.form as PostArtformType,
       parameters: JSON.parse(String(post.parameters)),
     },
   }));
