@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { createContext, useEffect, useState } from "react";
 import { ArtClient } from "../services/artClient";
+import { zapiClient } from "../services/artClient";
 
 import { initialInProgressPost, initialPosts, InProgressPostType, PostType } from "@/services/artService";
 import {
@@ -37,7 +38,7 @@ export default function RootLayout({
   const [posts, setPosts] = useState<PostType[]>(initialPosts);
   const [inProgressPost, setInProgressPost] = useState<InProgressPostType>(initialInProgressPost);
   useEffect(() => {
-    new ArtClient().getPosts().then((posts) => {
+    zapiClient.get("/allPosts").then((posts) => {
       console.log("allposts", posts);
       setPosts(posts);
 
