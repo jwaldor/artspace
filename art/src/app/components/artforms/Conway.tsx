@@ -6,6 +6,7 @@ import { Mesh } from "three";
 import { conwayEngine, countNeighbors } from "@/app/lib/renderengines";
 import { OrbitControls } from "@react-three/drei";
 
+
 const pulsar = [
     [false, false, true, true, true, false, false, false, true, true, true, false, false],
     [false, false, false, false, false, false, false, false, false, false, false, false, false],
@@ -94,7 +95,7 @@ export function ConwayMesh() {
 
 export function Conway() {
     return (
-        <Canvas style={{ height: '48rem', width: '100%' }}>
+        <Canvas style={{ height: '48rem', width: '100%' }} camera={{ fov: 75, position: [0, 10, 20] }}>
             <ambientLight />
             <pointLight position={[15, 15, 15]} />
             <OrbitControls makeDefault position={[0, 0, 0]} />
