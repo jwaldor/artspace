@@ -42,11 +42,13 @@ export function ThreeBodyMesh() {
 
 export function ThreeBody() {
     return (
-        <Canvas style={{ height: '48rem', width: '100%' }}>
+        <Canvas style={{ height: '48rem', width: '100%' }} camera={{ fov: 75, position: [14.550615559528373, -9.456024394240801, 19.107616039056747] }}>
             <ThreeBodyMesh />
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            <OrbitControls />
+            <OrbitControls
+
+            />
             <directionalLight position={[5, 5, 5]} intensity={1} />
         </Canvas>
     );
