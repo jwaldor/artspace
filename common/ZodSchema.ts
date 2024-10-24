@@ -3,7 +3,6 @@ import { apiBuilder, makeApi } from "@zodios/core";
 
 export const postSchema = z.object({
   id: z.number(),
-  name: z.string(),
   likes: z.number(),
   updatedAt: z.coerce.date(),
   createdById: z.string(),

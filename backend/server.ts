@@ -7,6 +7,8 @@ import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
 import { zodiosApp } from "@zodios/express";
 import { postApi } from "../common/ZodSchema";
 import { PostArtformType } from "./express";
+import { z } from "zod";
+import { newPostSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
 const app = zodiosApp(postApi);
@@ -81,8 +83,12 @@ app.get("/", (req, res) => {
   return;
 });
 
+// Define the type from the Zod schema
+type NewPost = z.infer<typeof newPostSchema>;
+
 app.post("/createPost", authAndUserMiddleware, async (req, res) => {
-  const { name, artform } = req.body;
+  // Use the inferred type for the request body
+  const { name, artform }: NewPost = req.body;
   console.log("name, parameters, artform", name, artform);
   const user = req.user;
   const post = await prisma.artPiece.create({
