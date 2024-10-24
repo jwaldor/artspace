@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { PostType, InProgressPostType } from "./artService";
 import { postSchema, newPostSchema } from "../../../common/ZodSchema";
+import { postApi } from "../../../common/ZodSchema";
+import axios from "axios";
+import { Zodios } from "@zodios/core";
 
 // Generic API client
 class ApiClient {
@@ -120,3 +123,16 @@ export class ArtClient extends ApiClient {
 //   creator: 'User',
 //   artform: { type: 'Shiba', parameters: { fog: 10 } },
 // });
+
+export const zapiClient = new Zodios("http://localhost:5173", postApi);
+
+apiClient.get("/allPosts");
+
+// async function fetchAllPosts() {
+//   try {
+//     const response = postApi.get("/allPosts");
+//     const posts = postSchema.array().parse(response.data); // Validate response with Zod
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//   }
+// }
