@@ -1,9 +1,9 @@
 "use client";
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../layout';
 import { useRouter } from 'next/navigation';
 // import { useControls } from 'leva';
-import { updateParameters } from '@/services/artService';
+import { artFormDefaults, InProgressPostType, updateParameters } from '@/services/artService';
 
 
 import { getArtFormComponent } from '../components/Post';
@@ -12,6 +12,7 @@ import { useAuth } from '@clerk/nextjs';
 export default function CreatePost() {
 
     const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
+    const [artType, setArtType] = useState<InProgressPostType["artform"]["type"]>(inProgressPost.artform.type);
     const { getToken } = useAuth();
     // const params = useControls('Art Form Parameters', inProgressPost.artform.parameters);
     const router = useRouter();
@@ -47,6 +48,19 @@ export default function CreatePost() {
         <div className="container mx-auto p-4">
             {getArtFormComponent(inProgressPost.artform)}
             <button className="flex rounded-md p-4 hover:bg-blue-100" onClick={handleSubmit}>Create</button>
+            <select
+                className="mt-4 block w-full rounded-md border border-gray-300 p-2"
+                value={artType}
+                onChange={(e) => {
+                    const newType = e.target.value as InProgressPostType["artform"]["type"];
+                    setArtType(newType);
+                    setInProgressPost(artFormDefaults[newType]);
+                }}
+            >
+                <option value="Shiba">Shiba</option>
+                <option value="Conway">Conway</option>
+            </select>
         </div>
+
     );
 }
