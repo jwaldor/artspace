@@ -26,6 +26,9 @@ type ConwayParameters = Extract<
 export function ConwayMesh(props: ConwayParameters) {
     const mesh = useRef<Mesh>(null!);
     const [grid, setGrid] = useState<ConwayParameters["live"]>(props.live);
+    useEffect(() => {
+        setGrid(props.live);
+    }, [props.live]);
     const updateGrid = () => {
         setGrid((grid) => { console.log("grid", grid); return conwayEngine(grid) });
         setTimeout(() => {
