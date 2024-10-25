@@ -2,8 +2,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../layout';
 import { useRouter } from 'next/navigation';
-// import { useControls } from 'leva';
-import { artFormDefaults, InProgressPostType, updateParameters } from '@/services/artService';
+import { LevaPanel, useControls } from 'leva';
+import { ArtForm, artFormDefaults, InProgressPostType, updateParameters } from '@/services/artService';
 
 
 import { getArtFormComponent } from '../components/Post';
@@ -14,7 +14,7 @@ export default function CreatePost() {
     const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
     const [artType, setArtType] = useState<InProgressPostType["artform"]["type"]>(inProgressPost.artform.type);
     const { getToken } = useAuth();
-    // const params = useControls('Art Form Parameters', inProgressPost.artform.parameters);
+    const params = useControls('Art Form Parameters', { test: { value: 1, min: 0, max: 10 } });
     const router = useRouter();
 
 
@@ -29,6 +29,43 @@ export default function CreatePost() {
     // }, [params, setInProgressPost]);
 
 
+
+    function getArtFormEditor() {
+        if (inProgressPost.artform.type === "Conway" && "live" in inProgressPost.artform.parameters) {
+            console.log("live", inProgressPost.artform.parameters.live);
+            return (
+                <div className="grid gap-1 p-4">
+                    {inProgressPost.artform.parameters.live.map((row, rowIndex) => (
+                        <div key={rowIndex} className="flex gap-1">
+                            {row.map((cell, colIndex) => (
+                                <div
+                                    key={`${rowIndex}-${colIndex}`}
+                                    className={`w-6 h-6 rounded-full cursor-pointer ${cell ? 'bg-green-500' : 'bg-gray-300'}`}
+                                    onClick={() => {
+                                        const newLive = inProgressPost.artform.parameters.live.map((r, i) =>
+                                            i === rowIndex
+                                                ? r.map((c, j) => (j === colIndex ? !c : c))
+                                                : [...r]
+                                        );
+                                        setInProgressPost(prev => {
+                                            return {
+                                                artform: {
+                                                    ...prev.artform,
+                                                    parameters: {
+                                                        live: newLive
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -60,6 +97,7 @@ export default function CreatePost() {
                 <option value="Shiba">Shiba</option>
                 <option value="Conway">Conway</option>
             </select>
+            {getArtFormEditor()}
         </div>
 
     );
