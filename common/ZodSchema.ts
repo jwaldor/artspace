@@ -6,7 +6,7 @@ export const postSchema = z.object({
   likes: z.number(),
   updatedAt: z.coerce.date(),
   createdById: z.string(),
-  // createdByName: z.string(),
+  createdByName: z.string(),
   artform: z.union([
     z.object({
       type: z.literal("Shiba"),

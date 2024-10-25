@@ -151,18 +151,18 @@ app.get("/allPosts", async (req, res) => {
           likes: true,
         },
       },
+      createdBy: true, // Add this line to include user data
     },
   });
   const postsWithLikes = posts.map((post) => ({
     ...post,
     likes: post._count.likes,
+    createdByName: post.createdBy.name, // Add this line
     artform: {
       type: post.form as PostArtformType,
       parameters: JSON.parse(String(post.parameters)),
     },
   }));
-  console.log(posts[0].parameters);
-  console.log(postsWithLikes);
   res.json(postsWithLikes);
   return;
 });
