@@ -59,7 +59,6 @@ export function updateParameters<T extends ArtForm>(
   params: T["parameters"]
 ): InProgressPostType {
   return {
-    ...inProgressPost,
     artform: { ...inProgressPost.artform, parameters: params } as T,
   };
 }

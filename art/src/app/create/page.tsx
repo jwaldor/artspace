@@ -2,7 +2,7 @@
 import { useContext, useEffect } from 'react';
 import { GlobalContext } from '../layout';
 import { useRouter } from 'next/navigation';
-import { useControls } from 'leva';
+// import { useControls } from 'leva';
 import { updateParameters } from '@/services/artService';
 
 
@@ -13,7 +13,7 @@ export default function CreatePost() {
 
     const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
     const { getToken } = useAuth();
-    const params = useControls('Art Form Parameters', inProgressPost.artform.parameters);
+    // const params = useControls('Art Form Parameters', inProgressPost.artform.parameters);
     const router = useRouter();
 
 
@@ -23,9 +23,9 @@ export default function CreatePost() {
 
 
     // Update inProgressPost when params change
-    useEffect(() => {
-        setInProgressPost(prev => updateParameters(prev, params));
-    }, [params, setInProgressPost]);
+    // useEffect(() => {
+    //     setInProgressPost(prev => updateParameters(prev, params));
+    // }, [params, setInProgressPost]);
 
 
 
