@@ -13,6 +13,7 @@ type ConwayParameters = Extract<
     { type: "Conway" }
 >["parameters"];
 
+
 const pulsar = [
     [false, false, true, true, true, false, false, false, true, true, true, false, false],
     [false, false, false, false, false, false, false, false, false, false, false, false, false],
@@ -33,9 +34,9 @@ const pulsar = [
 
 
 
-export function ConwayMesh() {
+export function ConwayMesh(props: ConwayParameters) {
     const mesh = useRef<Mesh>(null!);
-    const [grid, setGrid] = useState<ConwayParameters["live"]>(pulsar);
+    const [grid, setGrid] = useState<ConwayParameters["live"]>(props.live);
     const updateGrid = () => {
         setGrid((grid) => { console.log("grid", grid); return conwayEngine(grid) });
         setTimeout(() => {
@@ -101,14 +102,14 @@ export function ConwayMesh() {
     );
 }
 
-export function Conway() {
+export function Conway(props: ConwayParameters) {
     return (
         <Canvas style={{ height: '48rem', width: '100%' }} camera={{ fov: 75, position: [0, 10, 20] }}>
             <ambientLight />
             <pointLight position={[15, 15, 15]} />
             <OrbitControls makeDefault position={[0, 0, 0]} />
             <directionalLight position={[5, 5, 5]} intensity={1} />
-            <ConwayMesh />
+            <ConwayMesh live={props.live} />
         </Canvas>
     );
 }
