@@ -1,5 +1,5 @@
 import { Shiba } from "./artforms/Shiba";
-
+import { Conway } from "./artforms/Conway";
 import { ArtForm, PostType } from "@/services/artService";
 
 export function getArtFormComponent(artForm: ArtForm) {
@@ -7,6 +7,12 @@ export function getArtFormComponent(artForm: ArtForm) {
     if (artForm.type === "Shiba") {
         return <Shiba fog={artForm.parameters.fog} />;
     }
+    if (artForm.type === "Conway") {
+        return <Conway live={artForm.parameters.live} />;
+    }
+    // if (artForm.type === "ThreeBody") {
+    //     return <ThreeBody />;
+    // }
     return null;
 }
 
