@@ -5,7 +5,13 @@ import { Canvas } from "@react-three/fiber";
 import { Mesh } from "three";
 import { conwayEngine, countNeighbors } from "@/app/lib/renderengines";
 import { OrbitControls } from "@react-three/drei";
+import { postSchema } from "../../../../../common/ZodSchema";
+import { z } from "zod";
 
+type ConwayParameters = Extract<
+    z.infer<typeof postSchema>["artform"],
+    { type: "Conway" }
+>["parameters"];
 
 const pulsar = [
     [false, false, true, true, true, false, false, false, true, true, true, false, false],
@@ -25,9 +31,11 @@ const pulsar = [
 
 
 
+
+
 export function ConwayMesh() {
     const mesh = useRef<Mesh>(null!);
-    const [grid, setGrid] = useState<boolean[][]>(pulsar);
+    const [grid, setGrid] = useState<ConwayParameters["live"]>(pulsar);
     const updateGrid = () => {
         setGrid((grid) => { console.log("grid", grid); return conwayEngine(grid) });
         setTimeout(() => {
