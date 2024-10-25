@@ -42,7 +42,8 @@ export const postApi = makeApi([
   {
     method: "post",
     path: "/createPost",
-    body: newPostSchema,
+    parameters: [{ name: "post", type: "Body", schema: newPostSchema }],
+    // body: newPostSchema,
     response: z.void(),
   },
   {

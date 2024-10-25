@@ -5,7 +5,7 @@ import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
 import { useRouter } from "next/navigation";
-
+import { ThreeBody } from "./components/artforms/ThreeBody";
 
 
 
@@ -40,6 +40,7 @@ export default function Home() {
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
+          {/* <ThreeBody /> */}
         </div>
       </div>
     </main>

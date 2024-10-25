@@ -7,10 +7,11 @@ import { artFormDefaults, InProgressPostType } from '@/services/artService';
 
 import { getArtFormComponent } from '../components/Post';
 import { useAuth } from '@clerk/nextjs';
+import { zapiClient } from '@/services/artClient';
 
 export default function CreatePost() {
 
-    const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
+    const { inProgressPost, setInProgressPost } = useContext(GlobalContext);
     const [artType, setArtType] = useState<InProgressPostType["artform"]["type"]>(inProgressPost.artform.type);
     const { getToken } = useAuth();
     const router = useRouter();
@@ -62,10 +63,7 @@ export default function CreatePost() {
         const token = await getToken();
         console.log("firsttoken", token);
         console.log("calling createPost");
-        client.createPost(inProgressPost, token ?? undefined).then((post) => {
-            console.log("created post");
-            console.log(post);
-        });
+        zapiClient.post("/createPost", inProgressPost, { headers: { Authorization: `Bearer ${token}` } })
         // Here you would typically send this data to your backend
         // For now, we'll just log it and redirect
         router.push('/');
