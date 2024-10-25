@@ -187,17 +187,16 @@ app.post(
 app.get("/allPosts", async (req, res) => {
   const posts = await prisma.artPiece.findMany({
     include: {
-      _count: {
-        select: {
-          likes: true,
-        },
-      },
+      likes: { include: { user: { select: { id: true, name: true } } } },
       createdBy: true, // Add this line to include user data
     },
   });
   const postsWithLikes = posts.map((post) => ({
     ...post,
-    likes: post._count.likes,
+    likes: post.likes.map((like) => ({
+      id: like.user.id,
+      name: like.user.name,
+    })),
     createdByName: post.createdBy.name, // Add this line
     artform: {
       type: post.form as PostArtformType,
