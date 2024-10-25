@@ -1,9 +1,8 @@
 "use client";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { GlobalContext } from '../layout';
 import { useRouter } from 'next/navigation';
-import { LevaPanel, useControls } from 'leva';
-import { ArtForm, artFormDefaults, InProgressPostType, updateParameters } from '@/services/artService';
+import { artFormDefaults, InProgressPostType } from '@/services/artService';
 
 
 import { getArtFormComponent } from '../components/Post';
@@ -14,21 +13,12 @@ export default function CreatePost() {
     const { client, inProgressPost, setInProgressPost } = useContext(GlobalContext);
     const [artType, setArtType] = useState<InProgressPostType["artform"]["type"]>(inProgressPost.artform.type);
     const { getToken } = useAuth();
-    const params = useControls('Art Form Parameters', { test: { value: 1, min: 0, max: 10 } });
     const router = useRouter();
 
     const parameters = inProgressPost.artform.parameters;
 
 
     console.log("parameters", inProgressPost.artform.parameters);
-
-    // const t = useControls({ inProgressPost.artform.parameters });
-
-
-    // Update inProgressPost when params change
-    // useEffect(() => {
-    //     setInProgressPost(prev => updateParameters(prev, params));
-    // }, [params, setInProgressPost]);
 
 
 
