@@ -16,7 +16,7 @@ function Post({ post }: { post: PostType }) {
         <div className="w-[75%]">
             <div className="flex flex-col border border-gray-300 rounded-md p-4">
                 <div className="flex justify-between items-center mb-2">
-                    <div className="font-medium text-lg">{post.name}</div>
+                    {/* <div className="font-medium text-lg">{post.name}</div> */}
                     <div className="text-sm text-gray-500">{post.updatedAt.toLocaleDateString()}</div>
                 </div>
                 <div className="flex items-center justify-center">
