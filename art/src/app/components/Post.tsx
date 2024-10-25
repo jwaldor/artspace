@@ -19,7 +19,7 @@ export function getArtFormComponent(artForm: ArtForm) {
 function Post({ post }: { post: PostType }) {
     console.log("post", post);
     return (
-        <div className="w-[75%]">
+        <div className="">
             <div className="flex flex-col border border-gray-300 rounded-md p-4">
                 <div className="flex justify-between items-center mb-2">
                     {/* <div className="font-medium text-lg">{post.name}</div> */}

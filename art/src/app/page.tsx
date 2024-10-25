@@ -4,14 +4,13 @@ import { useContext } from "react";
 import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
-import { Conway } from "./components/artforms/Conway";
-import { ThreeBody } from "./components/artforms/ThreeBody";
+
 
 
 
 
 function CreatePost() {
-  return <button className="flex rounded-md p-4 hover:bg-blue-100">Create</button>;
+  return <button className="flex rounded-md p-4 hover:bg-blue-100 self-start ml-2">Create</button>;
 }
 
 
@@ -31,11 +30,12 @@ export default function Home() {
         <h1>Art Space</h1>
         {/* <CreatePost /> */}
         {/* <ThreeBody /> */}
-
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
-
+        <div className="flex flex-col items-center gap-4">
+          <CreatePost />
+          {posts.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </div>
       </div>
     </main>
   );
