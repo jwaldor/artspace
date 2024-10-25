@@ -32,7 +32,7 @@ export const postSchema = z.object({
 export const newPostSchema = z.object({
   artform: postSchema.shape.artform,
 });
-export const likeSchema = z.object({ postId: z.number(), userId: z.string() });
+export const likeSchema = z.object({ postId: z.number() });
 export const postApi = makeApi([
   {
     method: "get",
@@ -57,7 +57,7 @@ export const postApi = makeApi([
       },
     ],
     // body: newPostSchema,
-    response: z.void(),
+    response: z.object({ success: z.boolean() }),
   },
   {
     method: "get",

@@ -56,7 +56,7 @@ const loggerMiddleware = (req, res, next) => {
   //   return;
   // }
 
-  console.log("Request:", {
+  console.log("Request here:", {
     method: req.method,
     url: req.url,
     headers: req.headers,
@@ -127,6 +127,7 @@ app.post(
     console.log("creating post");
     const user = req.user;
     if (!user) {
+      console.error("user id not found");
       res.status(401).json({ error: "Unauthorized" } as any);
       return;
     }
@@ -153,17 +154,26 @@ app.post(
   >,
   attachUserMiddleware,
   async (req, res) => {
-    const { postId, userId } = req.body;
+    console.log("toggle like post");
+    const { postId } = req.body;
+    const user = req.user;
+    if (!user) {
+      console.error("user id not found");
+      res.status(401).json({ error: "Unauthorized" } as any);
+      return;
+    }
     const like = await prisma.like.findFirst({
-      where: { artPieceId: postId, userId },
+      where: { artPieceId: postId, userId: user.id },
     });
     if (like) {
       await prisma.like.delete({ where: { id: like.id } });
     } else {
-      await prisma.like.create({ data: { artPieceId: postId, userId } });
+      await prisma.like.create({
+        data: { artPieceId: postId, userId: user.id },
+      });
     }
     console.log("postId", postId);
-    res.status(200);
+    res.json({ success: true });
     return;
   }
 );
