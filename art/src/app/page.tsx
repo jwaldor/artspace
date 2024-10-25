@@ -29,9 +29,8 @@ export default function Home() {
           signed out
         </SignedOut>
         <h1>Art Space</h1>
-        <CreatePost />
-        <Conway />
-        <ThreeBody />
+        {/* <CreatePost /> */}
+        {/* <ThreeBody /> */}
 
         {posts.map((post) => (
           <Post key={post.id} post={post} />

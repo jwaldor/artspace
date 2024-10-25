@@ -40,8 +40,8 @@ export default function RootLayout({
   useEffect(() => {
     zapiClient.get("/allPosts").then((posts) => {
       console.log("allposts", posts);
-      setPosts(posts);
-
+      const sortedPosts = posts.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+      setPosts(sortedPosts);
     });
   }, []);
   return (
