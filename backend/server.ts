@@ -83,6 +83,8 @@ const attachUserMiddleware = async (req, res, next) => {
   next();
 };
 
+// const optionalAttachUserMiddleware;
+
 // const authAndUserMiddleware = [
 //   loggerMiddleware,
 //   requireAuth(),

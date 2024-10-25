@@ -13,7 +13,7 @@ datasource db {
 // Define your models here
 model User {
   id        String      @id @unique
-  name      String?
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   artPieces ArtPiece[]
