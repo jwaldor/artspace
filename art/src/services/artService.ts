@@ -2,9 +2,12 @@ import { postSchema, newPostSchema } from "../../../common/ZodSchema";
 import { z } from "zod";
 
 console.log(postSchema.shape, newPostSchema.shape);
-export type ShibaParameters = { fog: number };
+export type ShibaParameters = Extract<
+  z.infer<typeof postSchema>["artform"],
+  { type: "Shiba" }
+>["parameters"];
 
-export type ArtForms = "Shiba";
+export type ArtForms = z.infer<typeof postSchema>["artform"]["type"];
 export const defaultArtForm: ArtForms = "Shiba";
 
 export type ArtForm = z.infer<typeof postSchema>["artform"];
