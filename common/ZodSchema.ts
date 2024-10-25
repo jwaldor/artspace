@@ -3,10 +3,10 @@ import { apiBuilder, makeApi } from "@zodios/core";
 
 export const postSchema = z.object({
   id: z.number(),
-  likes: z.number(),
+  likes: z.array(z.object({ id: z.string(), name: z.string() })),
   updatedAt: z.coerce.date(),
   createdById: z.string(),
-  // createdByName: z.string(),
+  createdByName: z.string(),
   artform: z.union([
     z.object({
       type: z.literal("Shiba"),
@@ -32,7 +32,7 @@ export const postSchema = z.object({
 export const newPostSchema = z.object({
   artform: postSchema.shape.artform,
 });
-
+export const likeSchema = z.object({ postId: z.number() });
 export const postApi = makeApi([
   {
     method: "get",
@@ -42,8 +42,22 @@ export const postApi = makeApi([
   {
     method: "post",
     path: "/createPost",
-    body: newPostSchema,
+    parameters: [{ name: "post", type: "Body", schema: newPostSchema }],
+    // body: newPostSchema,
     response: z.void(),
+  },
+  {
+    method: "post",
+    path: "/toggleLikePost",
+    parameters: [
+      {
+        name: "postUser",
+        type: "Body",
+        schema: likeSchema,
+      },
+    ],
+    // body: newPostSchema,
+    response: z.object({ success: z.boolean() }),
   },
   {
     method: "get",

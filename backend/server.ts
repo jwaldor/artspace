@@ -9,6 +9,8 @@ import { postApi } from "../common/ZodSchema";
 import { PostArtformType } from "./express";
 import { z } from "zod";
 import { newPostSchema } from "../common/ZodSchema";
+import { clerkClient } from "@clerk/express";
+
 // import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
@@ -54,7 +56,7 @@ const loggerMiddleware = (req, res, next) => {
   //   return;
   // }
 
-  console.log("Request:", {
+  console.log("Request here:", {
     method: req.method,
     url: req.url,
     headers: req.headers,
@@ -72,8 +74,15 @@ const attachUserMiddleware = async (req, res, next) => {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
+  const response = await clerkClient.users.getUser(clerkUser);
+  console.log("response", response.username);
+  if (typeof response.username !== "string") {
+    console.error("Bad request: No username provided");
+    res.status(400).json({ error: "Bad request: No username provided" });
+    return;
+  }
   const user: User | null = await dbService.getUser(clerkUser);
-  req.user = user || (await dbService.createUser(clerkUser));
+  req.user = user || (await dbService.createUser(clerkUser, response.username));
   // Validate response using authResponseSchema
   // const parsedResponse = authResponseSchema.safeParse(res);
   // if (!parsedResponse.success) {
@@ -99,12 +108,12 @@ app.get("/", (req, res) => {
 // Define the type from the Zod schema
 type NewPost = z.infer<typeof newPostSchema>;
 
-const requireAuthVar = requireAuth();
+// const requireAuthVar = ;
 
 app.post(
   "/createPost",
   loggerMiddleware,
-  requireAuthVar as ZodiosRequestHandler<
+  requireAuth() as ZodiosRequestHandler<
     typeof postApi,
     any,
     "post",
@@ -115,8 +124,10 @@ app.post(
     // Use the inferred type for the request body
     const { artform }: NewPost = req.body;
     console.log("name, parameters, artform", artform);
+    console.log("creating post");
     const user = req.user;
     if (!user) {
+      console.error("user id not found");
       res.status(401).json({ error: "Unauthorized" } as any);
       return;
     }
@@ -132,6 +143,41 @@ app.post(
   }
 );
 
+app.post(
+  "/toggleLikePost",
+  loggerMiddleware,
+  requireAuth() as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/toggleLikePost"
+  >,
+  attachUserMiddleware,
+  async (req, res) => {
+    console.log("toggle like post");
+    const { postId } = req.body;
+    const user = req.user;
+    if (!user) {
+      console.error("user id not found");
+      res.status(401).json({ error: "Unauthorized" } as any);
+      return;
+    }
+    const like = await prisma.like.findFirst({
+      where: { artPieceId: postId, userId: user.id },
+    });
+    if (like) {
+      await prisma.like.delete({ where: { id: like.id } });
+    } else {
+      await prisma.like.create({
+        data: { artPieceId: postId, userId: user.id },
+      });
+    }
+    console.log("postId", postId);
+    res.json({ success: true });
+    return;
+  }
+);
+
 // app.get("/users", async (req, res) => {
 //   const users = await prisma.user.findMany();
 //   res.json(users);
@@ -141,23 +187,23 @@ app.post(
 app.get("/allPosts", async (req, res) => {
   const posts = await prisma.artPiece.findMany({
     include: {
-      _count: {
-        select: {
-          likes: true,
-        },
-      },
+      likes: { include: { user: { select: { id: true, name: true } } } },
+      createdBy: true, // Add this line to include user data
     },
   });
   const postsWithLikes = posts.map((post) => ({
     ...post,
-    likes: post._count.likes,
+    likes: post.likes.map((like) => ({
+      id: like.user.id,
+      name: like.user.name,
+    })),
+    createdByName: post.createdBy.name, // Add this line
     artform: {
       type: post.form as PostArtformType,
       parameters: JSON.parse(String(post.parameters)),
     },
   }));
-  console.log(posts[0].parameters);
-  console.log(postsWithLikes);
+  console.log("postsWithLikes", postsWithLikes);
   res.json(postsWithLikes);
   return;
 });

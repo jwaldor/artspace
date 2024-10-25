@@ -17,7 +17,7 @@ export function ThreeBodyMesh() {
         function updateCoordinates() {
             setCoordinates(coordinates => threeBodyEngine(coordinates));
             console.log("updating coordinates");
-            setTimeout(updateCoordinates, 50);
+            setTimeout(updateCoordinates, 10);
         }
         updateCoordinates();
         effectRan.current = true;

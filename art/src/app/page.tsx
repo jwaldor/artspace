@@ -2,10 +2,10 @@
 
 import { useContext } from "react";
 import { GlobalContext } from "./layout";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import Post from "./components/Post";
 import { useRouter } from "next/navigation";
-
+// import { ThreeBody } from "./components/artforms/ThreeBody";
 
 
 
@@ -27,7 +27,7 @@ export default function Home() {
     <main>
       <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <SignedIn>
-          signed in
+          <SignOutButton />
         </SignedIn>
         <SignedOut>
           signed out
@@ -40,6 +40,7 @@ export default function Home() {
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
+          {/* <ThreeBody /> */}
         </div>
       </div>
     </main>

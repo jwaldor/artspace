@@ -25,9 +25,9 @@ const geistMono = localFont({
 });
 
 
-type GlobalContextType = { client: ArtClient, posts: PostType[]; inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>> }
+type GlobalContextType = { client: ArtClient, posts: PostType[], inProgressPost: InProgressPostType, setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>>, setPosts: React.Dispatch<React.SetStateAction<PostType[]>> }
 
-export const GlobalContext = createContext<GlobalContextType>({ client: new ArtClient(), posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { } })
+export const GlobalContext = createContext<GlobalContextType>({ client: new ArtClient(), posts: initialPosts, inProgressPost: initialInProgressPost, setInProgressPost: () => { }, setPosts: () => { } })
 
 
 export default function RootLayout({
@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <ClerkProvider>
-        <GlobalContext.Provider value={{ client: new ArtClient(), posts, inProgressPost, setInProgressPost }}>
+        <GlobalContext.Provider value={{ client: new ArtClient(), posts, inProgressPost, setInProgressPost, setPosts }}>
           <SignedOut>
             <SignInButton />
           </SignedOut>
