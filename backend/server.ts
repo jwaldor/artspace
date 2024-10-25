@@ -163,6 +163,7 @@ app.get("/allPosts", async (req, res) => {
       parameters: JSON.parse(String(post.parameters)),
     },
   }));
+  console.log("postsWithLikes", postsWithLikes);
   res.json(postsWithLikes);
   return;
 });
