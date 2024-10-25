@@ -67,13 +67,18 @@ const attachUserMiddleware = async (req, res, next) => {
   console.log("authAndUserMiddleware");
   const auth = getAuth(req);
   const clerkUser = auth.userId;
+  const username = auth.sessionClaims?.username || auth.actor?.username;
+
   console.log("clerkUser", clerkUser);
   if (!clerkUser) {
     res.status(401).json({ error: "Unauthorized" });
     return;
+  } else if (typeof username !== "string") {
+    res.status(400).json({ error: "Bad request: No username provided" });
+    return;
   }
   const user: User | null = await dbService.getUser(clerkUser);
-  req.user = user || (await dbService.createUser(clerkUser));
+  req.user = user || (await dbService.createUser(clerkUser, username));
   // Validate response using authResponseSchema
   // const parsedResponse = authResponseSchema.safeParse(res);
   // if (!parsedResponse.success) {
@@ -82,8 +87,6 @@ const attachUserMiddleware = async (req, res, next) => {
   // }
   next();
 };
-
-// const optionalAttachUserMiddleware;
 
 // const authAndUserMiddleware = [
 //   loggerMiddleware,
