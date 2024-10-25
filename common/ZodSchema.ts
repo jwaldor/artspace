@@ -14,12 +14,12 @@ export const postSchema = z.object({
         fog: z.number(),
       }),
     }),
-    z.object({
-      type: z.literal("ThreeBody"),
-      parameters: z.object({
-        bodies: z.number(),
-      }),
-    }),
+    // z.object({
+    //   type: z.literal("ThreeBody"),
+    //   parameters: z.object({
+    //     bodies: z.number(),
+    //   }),
+    // }),
     z.object({
       type: z.literal("Conway"),
       parameters: z.object({

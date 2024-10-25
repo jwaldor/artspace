@@ -17,6 +17,8 @@ export default function CreatePost() {
     const params = useControls('Art Form Parameters', { test: { value: 1, min: 0, max: 10 } });
     const router = useRouter();
 
+    const parameters = inProgressPost.artform.parameters;
+
 
     console.log("parameters", inProgressPost.artform.parameters);
 
@@ -31,29 +33,27 @@ export default function CreatePost() {
 
 
     function getArtFormEditor() {
-        if (inProgressPost.artform.type === "Conway" && "live" in inProgressPost.artform.parameters) {
-            console.log("live", inProgressPost.artform.parameters.live);
+        if (inProgressPost.artform.type === "Conway" && "live" in parameters) {
+            console.log("live", parameters.live);
             return (
                 <div className="grid gap-1 p-4">
-                    {inProgressPost.artform.parameters.live.map((row, rowIndex) => (
+                    {parameters.live.map((row, rowIndex) => (
                         <div key={rowIndex} className="flex gap-1">
                             {row.map((cell, colIndex) => (
                                 <div
                                     key={`${rowIndex}-${colIndex}`}
                                     className={`w-6 h-6 rounded-full cursor-pointer ${cell ? 'bg-green-500' : 'bg-gray-300'}`}
                                     onClick={() => {
-                                        const newLive = inProgressPost.artform.parameters.live.map((r, i) =>
+                                        const newLive = parameters.live.map((r, i) =>
                                             i === rowIndex
                                                 ? r.map((c, j) => (j === colIndex ? !c : c))
                                                 : [...r]
                                         );
-                                        setInProgressPost(prev => {
-                                            return {
-                                                artform: {
-                                                    ...prev.artform,
-                                                    parameters: {
-                                                        live: newLive
-                                                    }
+                                        setInProgressPost({
+                                            artform: {
+                                                type: "Conway",
+                                                parameters: {
+                                                    live: newLive
                                                 }
                                             }
                                         });

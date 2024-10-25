@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
-const LevaPanel = dynamic(() => import('leva').then((mod) => mod.Leva), {
-    ssr: false,
-});
+// const LevaPanel = dynamic(() => import('leva').then((mod) => mod.Leva), {
+//     ssr: false,
+// });
 
 export default function CreateLayout({
     children,
@@ -16,7 +16,6 @@ export default function CreateLayout({
         <div className="create-layout">
             {/* You can add any layout-specific elements here */}
             {children}
-            <LevaPanel collapsed={false} />
         </div>
     );
 }

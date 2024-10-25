@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Mesh } from "three";
 import { ShibaParameters } from "@/services/artService";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
