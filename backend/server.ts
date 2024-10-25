@@ -108,12 +108,12 @@ app.get("/", (req, res) => {
 // Define the type from the Zod schema
 type NewPost = z.infer<typeof newPostSchema>;
 
-const requireAuthVar = requireAuth();
+// const requireAuthVar = ;
 
 app.post(
   "/createPost",
   loggerMiddleware,
-  requireAuthVar as ZodiosRequestHandler<
+  requireAuth() as ZodiosRequestHandler<
     typeof postApi,
     any,
     "post",
@@ -137,6 +137,32 @@ app.post(
         createdBy: { connect: { id: user.id } },
       },
     });
+    res.status(200);
+    return;
+  }
+);
+
+app.post(
+  "/toggleLikePost",
+  loggerMiddleware,
+  requireAuth() as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/toggleLikePost"
+  >,
+  attachUserMiddleware,
+  async (req, res) => {
+    const { postId, userId } = req.body;
+    const like = await prisma.like.findFirst({
+      where: { artPieceId: postId, userId },
+    });
+    if (like) {
+      await prisma.like.delete({ where: { id: like.id } });
+    } else {
+      await prisma.like.create({ data: { artPieceId: postId, userId } });
+    }
+    console.log("postId", postId);
     res.status(200);
     return;
   }
