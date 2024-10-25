@@ -9,6 +9,8 @@ import { postApi } from "../common/ZodSchema";
 import { PostArtformType } from "./express";
 import { z } from "zod";
 import { newPostSchema } from "../common/ZodSchema";
+import { clerkClient } from "@clerk/clerk-sdk-node";
+
 // import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
@@ -68,12 +70,15 @@ const attachUserMiddleware = async (req, res, next) => {
   const auth = getAuth(req);
   const clerkUser = auth.userId;
   const username = auth.sessionClaims?.username || auth.actor?.username;
-
+  console.log("username from clerk", username);
   console.log("clerkUser", clerkUser);
   if (!clerkUser) {
     res.status(401).json({ error: "Unauthorized" });
     return;
-  } else if (typeof username !== "string") {
+  }
+  const response = await clerkClient.users.getUser(clerkUser);
+  console.log("response", response);
+  if (typeof username !== "string") {
     res.status(400).json({ error: "Bad request: No username provided" });
     return;
   }
