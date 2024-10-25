@@ -9,7 +9,7 @@ import { postApi } from "../common/ZodSchema";
 import { PostArtformType } from "./express";
 import { z } from "zod";
 import { newPostSchema } from "../common/ZodSchema";
-import { clerkClient } from "@clerk/clerk-sdk-node";
+import { clerkClient } from "@clerk/express";
 
 // import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
@@ -69,21 +69,20 @@ const attachUserMiddleware = async (req, res, next) => {
   console.log("authAndUserMiddleware");
   const auth = getAuth(req);
   const clerkUser = auth.userId;
-  const username = auth.sessionClaims?.username || auth.actor?.username;
-  console.log("username from clerk", username);
   console.log("clerkUser", clerkUser);
   if (!clerkUser) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
   const response = await clerkClient.users.getUser(clerkUser);
-  console.log("response", response);
-  if (typeof username !== "string") {
+  console.log("response", response.username);
+  if (typeof response.username !== "string") {
+    console.error("Bad request: No username provided");
     res.status(400).json({ error: "Bad request: No username provided" });
     return;
   }
   const user: User | null = await dbService.getUser(clerkUser);
-  req.user = user || (await dbService.createUser(clerkUser, username));
+  req.user = user || (await dbService.createUser(clerkUser, response.username));
   // Validate response using authResponseSchema
   // const parsedResponse = authResponseSchema.safeParse(res);
   // if (!parsedResponse.success) {
@@ -125,6 +124,7 @@ app.post(
     // Use the inferred type for the request body
     const { artform }: NewPost = req.body;
     console.log("name, parameters, artform", artform);
+    console.log("creating post");
     const user = req.user;
     if (!user) {
       res.status(401).json({ error: "Unauthorized" } as any);
