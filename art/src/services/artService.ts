@@ -1,9 +1,212 @@
-import { ArtClient } from "./artClient";
+import { postSchema, newPostSchema } from "../../../common/ZodSchema";
 import { z } from "zod";
 
-export type ShibaParameters = { fog: number };
+console.log(postSchema.shape, newPostSchema.shape);
 
-export type ArtForms = "Shiba";
+const pulsar = [
+  [
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+  ],
+  [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+  ],
+  [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ],
+  [
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    true,
+  ],
+  [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ],
+  [
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+  ],
+];
+
+export type ShibaParameters = Extract<
+  z.infer<typeof postSchema>["artform"],
+  { type: "Shiba" }
+>["parameters"];
+
+export type ArtForms = z.infer<typeof postSchema>["artform"]["type"];
 export const defaultArtForm: ArtForms = "Shiba";
 
 export type ArtForm = z.infer<typeof postSchema>["artform"];
@@ -15,31 +218,55 @@ export type ArtFormParameters = PostType["artform"]["parameters"];
 
 export type InProgressPostType = z.infer<typeof newPostSchema>;
 
-export const postSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  likes: z.number(),
-  updatedAt: z.coerce.date(),
-  createdById: z.string(),
-  artform: z.union([
-    z.object({
-      type: z.literal("Shiba"),
-      parameters: z.object({
-        fog: z.number(),
-      }),
-    }),
-    z.object({
-      type: z.literal("Other"),
-      parameters: z.object({
-        other: z.number(),
-      }),
-    }),
-  ]),
-});
+export const artFormDefaults: {
+  [K in ArtFormType]: InProgressPostType & {
+    artform: Extract<ArtForm, { type: K }>;
+  };
+} = {
+  Shiba: {
+    artform: {
+      type: "Shiba",
+      parameters: {
+        fog: 10,
+      },
+    },
+  },
+  Conway: {
+    artform: {
+      type: "Conway",
+      parameters: {
+        live: pulsar,
+      },
+    },
+  },
+};
 
-export const newPostSchema = z.object({
-  artform: postSchema.shape.artform,
-});
+// export const postSchema = z.object({
+//   id: z.number(),
+//   name: z.string(),
+//   likes: z.number(),
+//   updatedAt: z.coerce.date(),
+//   createdById: z.string(),
+//   // createdByName: z.string(),
+//   artform: z.union([
+//     z.object({
+//       type: z.literal("Shiba"),
+//       parameters: z.object({
+//         fog: z.number(),
+//       }),
+//     }),
+//     z.object({
+//       type: z.literal("Other"),
+//       parameters: z.object({
+//         other: z.number(),
+//       }),
+//     }),
+//   ]),
+// });
+
+// export const newPostSchema = z.object({
+//   artform: postSchema.shape.artform,
+// });
 
 // getters
 // setters
@@ -54,21 +281,13 @@ export function updateParameters<T extends ArtForm>(
   params: T["parameters"]
 ): InProgressPostType {
   return {
-    ...inProgressPost,
     artform: { ...inProgressPost.artform, parameters: params } as T,
   };
-}
-
-async function getNewPosts() {
-  const artClient = new ArtClient();
-  const newPosts = await artClient.getPosts(); // this is a side effect, because it's a network call
-  return newPosts;
 }
 
 export const initialPosts: PostType[] = [
   {
     id: 0,
-    name: "Post 1",
     likes: 0,
     updatedAt: new Date(),
     createdById: "User 1",
@@ -76,7 +295,5 @@ export const initialPosts: PostType[] = [
   },
 ];
 
-export const initialInProgressPost: InProgressPostType = {
-  name: "",
-  artform: { type: "Shiba", parameters: { fog: 20 } },
-};
+export const initialInProgressPost: InProgressPostType =
+  artFormDefaults[defaultArtForm];

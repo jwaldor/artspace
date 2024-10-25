@@ -22,7 +22,6 @@ model User {
 
 model ArtPiece {
   id        Int      @id @default(autoincrement())
-  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   createdBy User     @relation(fields: [createdById], references: [id])

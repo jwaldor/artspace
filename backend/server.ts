@@ -1,12 +1,18 @@
-import express, { Request } from "express";
+import express, { Request, RequestHandler } from "express";
 import cors from "cors";
 import { PrismaClient, User } from "@prisma/client";
 import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
+import { zodiosApp, ZodiosRequestHandler } from "@zodios/express";
+import { postApi } from "../common/ZodSchema";
+import { PostArtformType } from "./express";
+import { z } from "zod";
+import { newPostSchema } from "../common/ZodSchema";
+// import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
-const app = express();
+const app = zodiosApp(postApi);
 
 // app.use((req, res, next) => {
 //   console.log(
@@ -40,36 +46,48 @@ app.use(clerkMiddleware());
 
 const dbService = DBService();
 
-const authAndUserMiddleware = [
-  (req, res, next) => {
-    console.log("Request:", {
-      method: req.method,
-      url: req.url,
-      headers: req.headers,
-      body: req.body,
-    });
-    next();
-  },
-  requireAuth(),
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.log("authAndUserMiddleware");
-    const auth = getAuth(req);
-    const clerkUser = auth.userId;
-    console.log("clerkUser", clerkUser);
-    if (!clerkUser) {
-      res.status(401).json({ error: "Unauthorized" });
-      return;
-    }
-    const user: User | null = await dbService.getUser(clerkUser);
-    req.user = user || (await dbService.createUser(clerkUser));
-    // console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    next();
-  },
-];
+const loggerMiddleware = (req, res, next) => {
+  // Validate request using authRequestSchema
+  // const parsedRequest = authRequestSchema.safeParse(req);
+  // if (!parsedRequest.success) {
+  //   res.status(400).json({ error: "Invalid request format" });
+  //   return;
+  // }
+
+  console.log("Request:", {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+  });
+  next();
+};
+
+const attachUserMiddleware = async (req, res, next) => {
+  console.log("authAndUserMiddleware");
+  const auth = getAuth(req);
+  const clerkUser = auth.userId;
+  console.log("clerkUser", clerkUser);
+  if (!clerkUser) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  const user: User | null = await dbService.getUser(clerkUser);
+  req.user = user || (await dbService.createUser(clerkUser));
+  // Validate response using authResponseSchema
+  // const parsedResponse = authResponseSchema.safeParse(res);
+  // if (!parsedResponse.success) {
+  //   res.status(500).json({ error: "Invalid response format" });
+  //   return;
+  // }
+  next();
+};
+
+// const authAndUserMiddleware = [
+//   loggerMiddleware,
+//   requireAuth(),
+//   attachUserMiddleware,
+// ];
 // Define a new middleware function
 
 app.get("/", (req, res) => {
@@ -78,27 +96,47 @@ app.get("/", (req, res) => {
   return;
 });
 
-app.post("/createPost", authAndUserMiddleware, async (req, res) => {
-  const { name, artform } = req.body;
-  console.log("name, parameters, artform", name, artform);
-  const user = req.user;
-  const post = await prisma.artPiece.create({
-    data: {
-      name,
-      parameters: JSON.stringify(artform.parameters),
-      form: artform.type,
-      createdBy: { connect: { id: user.id } },
-    },
-  });
-  res.status(200);
-  return;
-});
+// Define the type from the Zod schema
+type NewPost = z.infer<typeof newPostSchema>;
 
-app.get("/users", async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-  return;
-});
+const requireAuthVar = requireAuth();
+
+app.post(
+  "/createPost",
+  loggerMiddleware,
+  requireAuthVar as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/createPost"
+  >,
+  attachUserMiddleware,
+  async (req, res) => {
+    // Use the inferred type for the request body
+    const { artform }: NewPost = req.body;
+    console.log("name, parameters, artform", artform);
+    const user = req.user;
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" } as any);
+      return;
+    }
+    const post = await prisma.artPiece.create({
+      data: {
+        parameters: JSON.stringify(artform.parameters),
+        form: artform.type,
+        createdBy: { connect: { id: user.id } },
+      },
+    });
+    res.status(200);
+    return;
+  }
+);
+
+// app.get("/users", async (req, res) => {
+//   const users = await prisma.user.findMany();
+//   res.json(users);
+//   return;
+// });
 
 app.get("/allPosts", async (req, res) => {
   const posts = await prisma.artPiece.findMany({
@@ -114,7 +152,7 @@ app.get("/allPosts", async (req, res) => {
     ...post,
     likes: post._count.likes,
     artform: {
-      type: post.form,
+      type: post.form as PostArtformType,
       parameters: JSON.parse(String(post.parameters)),
     },
   }));

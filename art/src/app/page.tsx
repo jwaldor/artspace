@@ -4,12 +4,18 @@ import { useContext } from "react";
 import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
+import { useRouter } from "next/navigation";
+
+
 
 
 
 
 function CreatePost() {
-  return <button className="flex rounded-md p-4 hover:bg-blue-100">Create</button>;
+  const router = useRouter();
+  return <button className="flex rounded-md p-4 hover:bg-blue-100 self-start ml-2" onClick={() => {
+    router.push("/create");
+  }}>Create</button>;
 }
 
 
@@ -27,12 +33,14 @@ export default function Home() {
           signed out
         </SignedOut>
         <h1>Art Space</h1>
-        <CreatePost />
-
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
-
+        {/* <CreatePost /> */}
+        {/* <ThreeBody /> */}
+        <div className="flex flex-col items-center gap-4">
+          <CreatePost />
+          {posts.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </div>
       </div>
     </main>
   );

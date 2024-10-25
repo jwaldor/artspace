@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { PostType, InProgressPostType } from "./artService";
-import { postSchema, newPostSchema } from "./artService";
-// import { postSchema } from "../../../common/ZodSchema";
+import { postSchema, newPostSchema } from "../../../common/ZodSchema";
+import { postApi } from "../../../common/ZodSchema";
+import { Zodios } from "@zodios/core";
 
 // Generic API client
 class ApiClient {
@@ -113,11 +114,4 @@ export class ArtClient extends ApiClient {
   }
 }
 
-// Usage example:
-// const artClient = new ArtClient();
-// const posts = await artClient.getPosts();
-// const newPost = await artClient.createPost({
-//   name: 'New Post',
-//   creator: 'User',
-//   artform: { type: 'Shiba', parameters: { fog: 10 } },
-// });
+export const zapiClient = new Zodios("http://localhost:5173", postApi);

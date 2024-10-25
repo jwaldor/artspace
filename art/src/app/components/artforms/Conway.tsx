@@ -5,28 +5,30 @@ import { Canvas } from "@react-three/fiber";
 import { Mesh } from "three";
 import { conwayEngine, countNeighbors } from "@/app/lib/renderengines";
 import { OrbitControls } from "@react-three/drei";
+import { postSchema } from "../../../../../common/ZodSchema";
+import { z } from "zod";
+import dynamic from 'next/dynamic';
 
-const pulsar = [
-    [false, false, true, true, true, false, false, false, true, true, true, false, false],
-    [false, false, false, false, false, false, false, false, false, false, false, false, false],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [false, false, true, true, true, false, false, false, true, true, true, false, false],
-    [false, false, false, false, false, false, false, false, false, false, false, false, false],
-    [false, false, true, true, true, false, false, false, true, true, true, false, false],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [true, false, false, false, false, true, false, true, false, false, false, false, true],
-    [false, false, false, false, false, false, false, false, false, false, false, false, false],
-    [false, false, true, true, true, false, false, false, true, true, true, false, false]
-];
+const LevaPanel = dynamic(() => import('leva').then((mod) => mod.Leva), {
+    ssr: false,
+});
+
+type ConwayParameters = Extract<
+    z.infer<typeof postSchema>["artform"],
+    { type: "Conway" }
+>["parameters"];
 
 
 
-export function ConwayMesh() {
+
+
+
+export function ConwayMesh(props: ConwayParameters) {
     const mesh = useRef<Mesh>(null!);
-    const [grid, setGrid] = useState<boolean[][]>(pulsar);
+    const [grid, setGrid] = useState<ConwayParameters["live"]>(props.live);
+    useEffect(() => {
+        setGrid(props.live);
+    }, [props.live]);
     const updateGrid = () => {
         setGrid((grid) => { console.log("grid", grid); return conwayEngine(grid) });
         setTimeout(() => {
@@ -92,15 +94,21 @@ export function ConwayMesh() {
     );
 }
 
-export function Conway() {
+export function Conway(props: ConwayParameters) {
     return (
-        <Canvas style={{ height: '48rem', width: '100%' }}>
-            <ambientLight />
-            <pointLight position={[15, 15, 15]} />
-            <OrbitControls makeDefault position={[0, 0, 0]} />
-            <directionalLight position={[5, 5, 5]} intensity={1} />
-            <ConwayMesh />
-        </Canvas>
+        <>
+            <LevaPanel />
+            <Canvas style={{ height: '48rem', width: '100%' }} camera={{ fov: 75, position: [0, 10, 20] }}>
+                <ambientLight />
+                <pointLight position={[15, 15, 15]} />
+                <OrbitControls makeDefault position={[0, 0, 0]} />
+                <directionalLight position={[5, 5, 5]} intensity={1} />
+                <group rotation={[0, 0, 3 * Math.PI / 2]}>
+                    <ConwayMesh live={props.live} />
+                </group>
+            </Canvas>
+            <LevaPanel />
+        </>
     );
 }
 
