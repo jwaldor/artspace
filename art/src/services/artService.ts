@@ -285,15 +285,7 @@ export function updateParameters<T extends ArtForm>(
   };
 }
 
-export const initialPosts: PostType[] = [
-  {
-    id: 0,
-    likes: 0,
-    updatedAt: new Date(),
-    createdById: "User 1",
-    artform: { type: "Shiba", parameters: { fog: 1 } },
-  },
-];
+export const initialPosts: PostType[] = [];
 
 export const initialInProgressPost: InProgressPostType =
   artFormDefaults[defaultArtForm];
