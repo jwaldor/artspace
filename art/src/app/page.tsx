@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 
