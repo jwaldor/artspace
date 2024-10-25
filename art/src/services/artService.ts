@@ -19,6 +19,29 @@ export type ArtFormParameters = PostType["artform"]["parameters"];
 
 export type InProgressPostType = z.infer<typeof newPostSchema>;
 
+export const artFormDefaults: {
+  [K in ArtFormType]: InProgressPostType & {
+    artform: Extract<ArtForm, { type: K }>;
+  };
+} = {
+  Shiba: {
+    artform: {
+      type: "Shiba",
+      parameters: {
+        fog: 10,
+      },
+    },
+  },
+  Conway: {
+    artform: {
+      type: "Conway",
+      parameters: {
+        live: Array(13).fill(Array(13).fill(false)),
+      },
+    },
+  },
+};
+
 // export const postSchema = z.object({
 //   id: z.number(),
 //   name: z.string(),
