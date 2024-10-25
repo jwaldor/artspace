@@ -15,9 +15,15 @@ export const postSchema = z.object({
       }),
     }),
     z.object({
-      type: z.literal("Other"),
+      type: z.literal("ThreeBody"),
       parameters: z.object({
-        other: z.number(),
+        bodies: z.number(),
+      }),
+    }),
+    z.object({
+      type: z.literal("Conway"),
+      parameters: z.object({
+        live: z.array(z.array(z.boolean())),
       }),
     }),
   ]),
