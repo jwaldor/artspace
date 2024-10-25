@@ -103,7 +103,9 @@ export function Conway(props: ConwayParameters) {
                 <pointLight position={[15, 15, 15]} />
                 <OrbitControls makeDefault position={[0, 0, 0]} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
-                <ConwayMesh live={props.live} />
+                <group rotation={[0, 0, 3 * Math.PI / 2]}>
+                    <ConwayMesh live={props.live} />
+                </group>
             </Canvas>
             <LevaPanel />
         </>
