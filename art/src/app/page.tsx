@@ -4,13 +4,18 @@ import { useContext } from "react";
 import { GlobalContext } from "./layout";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Post from "./components/Post";
+import { useRouter } from "next/router";
+
 
 
 
 
 
 function CreatePost() {
-  return <button className="flex rounded-md p-4 hover:bg-blue-100 self-start ml-2">Create</button>;
+  const router = useRouter();
+  return <button className="flex rounded-md p-4 hover:bg-blue-100 self-start ml-2" onClick={() => {
+    router.push("/create");
+  }}>Create</button>;
 }
 
 
