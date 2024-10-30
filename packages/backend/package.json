@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ls",
-    "start": "bun server.ts",
+    "build": "npx prisma generate",
+    "start": "bun server.ts && npx prisma migrate deploy",
     "dev": "bun server.ts"
   },
   "keywords": [],
