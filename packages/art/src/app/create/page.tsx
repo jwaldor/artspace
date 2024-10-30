@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from 'react';
-import { GlobalContext } from '../layout';
+import { ArtContext } from '../layout';
 import { useRouter } from 'next/navigation';
 import { artFormDefaults, InProgressPostType } from '@/services/artService';
 
@@ -11,7 +11,7 @@ import { zapiClient } from '@/services/artClient';
 
 export default function CreatePost() {
 
-    const { inProgressPost, setInProgressPost } = useContext(GlobalContext);
+    const { inProgressPost, setInProgressPost } = useContext(ArtContext);
     const [artType, setArtType] = useState<InProgressPostType["artform"]["type"]>(inProgressPost.artform.type);
     const { getToken } = useAuth();
     const router = useRouter();
