@@ -1,6 +1,6 @@
-import express, { Request, RequestHandler } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
@@ -10,7 +10,7 @@ import { PostArtformType } from "./express";
 import { z } from "zod";
 import { newPostSchema } from "../common/ZodSchema";
 import { clerkClient } from "@clerk/express";
-
+import { User } from "@prisma/client";
 // import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
@@ -48,7 +48,7 @@ app.use(clerkMiddleware());
 
 const dbService = DBService();
 
-const loggerMiddleware = (req, res, next) => {
+const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Validate request using authRequestSchema
   // const parsedRequest = authRequestSchema.safeParse(req);
   // if (!parsedRequest.success) {
@@ -65,7 +65,11 @@ const loggerMiddleware = (req, res, next) => {
   next();
 };
 
-const attachUserMiddleware = async (req, res, next) => {
+const attachUserMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   console.log("authAndUserMiddleware");
   const auth = getAuth(req);
   const clerkUser = auth.userId;
@@ -112,14 +116,24 @@ type NewPost = z.infer<typeof newPostSchema>;
 
 app.post(
   "/createPost",
-  loggerMiddleware,
+  loggerMiddleware as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/createPost"
+  >,
   requireAuth() as ZodiosRequestHandler<
     typeof postApi,
     any,
     "post",
     "/createPost"
   >,
-  attachUserMiddleware,
+  attachUserMiddleware as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/createPost"
+  >,
   async (req, res) => {
     // Use the inferred type for the request body
     const { artform }: NewPost = req.body;
@@ -145,14 +159,24 @@ app.post(
 
 app.post(
   "/toggleLikePost",
-  loggerMiddleware,
+  loggerMiddleware as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/toggleLikePost"
+  >,
   requireAuth() as ZodiosRequestHandler<
     typeof postApi,
     any,
     "post",
     "/toggleLikePost"
   >,
-  attachUserMiddleware,
+  attachUserMiddleware as ZodiosRequestHandler<
+    typeof postApi,
+    any,
+    "post",
+    "/toggleLikePost"
+  >,
   async (req, res) => {
     console.log("toggle like post");
     const { postId } = req.body;
