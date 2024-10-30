@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "common": "file:*",
     "@clerk/nextjs": "^5.7.5",
     "@react-three/drei": "^9.114.6",
     "@react-three/fiber": "^8.17.10",
