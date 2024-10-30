@@ -28319,7 +28319,7 @@ var require_client = __commonJS((exports) => {
   exports.$Enums = {};
   Prisma.prismaVersion = {
     client: "5.21.1",
-    engine: "bf0e5e8a04cada8225617067eaa03d041e2bba36"
+    engine: "393aa359c9ad4a4bb28630fb5613f9c281cde053"
   };
   Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError2;
   Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError2;
@@ -28400,7 +28400,7 @@ var require_client = __commonJS((exports) => {
         value: "prisma-client-js"
       },
       output: {
-        value: "/Users/jacobwaldor/FractalBootcamp/Art/backend/node_modules/@prisma/client",
+        value: "/Users/jacobwaldor/FractalBootcamp/Art/packages/backend/node_modules/@prisma/client",
         fromEnvVar: null
       },
       config: {
@@ -28414,7 +28414,7 @@ var require_client = __commonJS((exports) => {
         }
       ],
       previewFeatures: [],
-      sourceFilePath: "/Users/jacobwaldor/FractalBootcamp/Art/backend/prisma/schema.prisma"
+      sourceFilePath: "/Users/jacobwaldor/FractalBootcamp/Art/packages/backend/prisma/schema.prisma"
     },
     relativeEnvPaths: {
       rootEnvPath: null,
@@ -28422,12 +28422,12 @@ var require_client = __commonJS((exports) => {
     },
     relativePath: "../../../prisma",
     clientVersion: "5.21.1",
-    engineVersion: "bf0e5e8a04cada8225617067eaa03d041e2bba36",
+    engineVersion: "393aa359c9ad4a4bb28630fb5613f9c281cde053",
     datasourceNames: [
       "db"
     ],
     activeProvider: "postgresql",
-    postinstall: false,
+    postinstall: true,
     inlineDatasources: {
       db: {
         url: {
