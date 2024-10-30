@@ -2,6 +2,7 @@
   "name": "art",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "common": "workspace:*",
     "@clerk/nextjs": "^5.7.5",
     "@react-three/drei": "^9.114.6",
     "@react-three/fiber": "^8.17.10",
