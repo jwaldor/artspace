@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define your models here
+model User {
+  id        String      @id @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  artPieces ArtPiece[]
+  likes Like[]
+}
+
+model ArtPiece {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy User     @relation(fields: [createdById], references: [id])
+  createdById String
+  form        String
+  parameters Json
+  likes Like[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  artPiece ArtPiece @relation(fields: [artPieceId], references: [id])
+  artPieceId Int
+  user User @relation(fields: [userId], references: [id])
+  userId String
+}
