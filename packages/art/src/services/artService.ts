@@ -1,4 +1,4 @@
-import { postSchema, newPostSchema } from "../../../common/ZodSchema";
+import { postSchema, newPostSchema } from "../ZodSchema";
 import { z } from "zod";
 import { ArtClient } from "./artClient";
 import { createContext } from "react";

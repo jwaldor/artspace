@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { PostType, InProgressPostType } from "./artService";
-import { postSchema, newPostSchema } from "../../../common/ZodSchema";
-import { postApi } from "../../../common/ZodSchema";
+import { postSchema, newPostSchema } from "../ZodSchema";
+import { postApi } from "../ZodSchema";
 import { Zodios } from "@zodios/core";
 
 // Generic API client
