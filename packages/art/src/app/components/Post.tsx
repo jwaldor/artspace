@@ -3,7 +3,7 @@ import { Conway } from "./artforms/Conway";
 import { ArtForm, PostType } from "@/services/artService";
 import { zapiClient } from "@/services/artClient";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { GlobalContext } from "../layout";
+import { ArtContext } from "@/services/artService";
 import { useCallback, useContext } from "react";
 
 export function getArtFormComponent(artForm: ArtForm) {
@@ -22,7 +22,7 @@ export function getArtFormComponent(artForm: ArtForm) {
 
 function Post({ post }: { post: PostType }) {
     console.log("post", post);
-    const { setPosts } = useContext(GlobalContext);
+    const { setPosts } = useContext(ArtContext);
     const { getToken } = useAuth();
     const user = useUser();
     const isLiked = useCallback(() => {
