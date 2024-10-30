@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { apiBuilder, makeApi } from "@zodios/core";
+import { makeApi } from "@zodios/core";
 
 export const postSchema = z.object({
   id: z.number(),
