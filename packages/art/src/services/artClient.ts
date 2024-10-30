@@ -114,4 +114,8 @@ export class ArtClient extends ApiClient {
   }
 }
 
-export const zapiClient = new Zodios("http://localhost:5173", postApi);
+if (!process.env.NEXT_PUBLIC_API_URL) {
+  throw new Error("NEXT_PUBLIC_API_URL is not set");
+}
+
+export const zapiClient = new Zodios(process.env.NEXT_PUBLIC_API_URL, postApi);
