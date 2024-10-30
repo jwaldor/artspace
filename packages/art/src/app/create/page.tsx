@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from 'react';
-import { ArtContext } from '../layout';
+import { ArtContext } from '@/services/artService';
 import { useRouter } from 'next/navigation';
 import { artFormDefaults, InProgressPostType } from '@/services/artService';
 

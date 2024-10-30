@@ -3,7 +3,7 @@ import { Conway } from "./artforms/Conway";
 import { ArtForm, PostType } from "@/services/artService";
 import { zapiClient } from "@/services/artClient";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { ArtContext } from "../layout";
+import { ArtContext } from "@/services/artService";
 import { useCallback, useContext } from "react";
 
 export function getArtFormComponent(artForm: ArtForm) {
