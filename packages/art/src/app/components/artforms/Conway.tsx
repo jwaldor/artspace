@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { Mesh } from "three";
 import { conwayEngine, countNeighbors } from "@/app/lib/renderengines";
 import { OrbitControls } from "@react-three/drei";
-import { postSchema } from "../../../../../common/ZodSchema";
+import { postSchema } from "../../../ZodSchema";
 import { z } from "zod";
 import dynamic from 'next/dynamic';
 
