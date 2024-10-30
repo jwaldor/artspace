@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 import { DBService } from "./services/databaseservices";
 import { clerkMiddleware, getAuth, requireAuth } from "@clerk/express";
 import { zodiosApp, ZodiosRequestHandler } from "@zodios/express";
