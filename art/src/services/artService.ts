@@ -1,5 +1,7 @@
 import { postSchema, newPostSchema } from "../../../common/ZodSchema";
 import { z } from "zod";
+import { ArtClient } from "./artClient";
+import { createContext } from "react";
 
 console.log(postSchema.shape, newPostSchema.shape);
 
@@ -289,3 +291,19 @@ export const initialPosts: PostType[] = [];
 
 export const initialInProgressPost: InProgressPostType =
   artFormDefaults[defaultArtForm];
+
+type ArtContextType = {
+  client: ArtClient;
+  posts: PostType[];
+  inProgressPost: InProgressPostType;
+  setInProgressPost: React.Dispatch<React.SetStateAction<InProgressPostType>>;
+  setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
+};
+
+export const ArtContext = createContext<ArtContextType>({
+  client: new ArtClient(),
+  posts: initialPosts,
+  inProgressPost: initialInProgressPost,
+  setInProgressPost: () => {},
+  setPosts: () => {},
+});

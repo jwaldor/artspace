@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { ArtContext } from "./layout";
+import { ArtContext } from "../services/artService";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import Post from "./components/Post";
 import { useRouter } from "next/navigation";
