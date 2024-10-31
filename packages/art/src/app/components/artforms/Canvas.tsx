@@ -1,21 +1,25 @@
 import { calculateRectangleDrawType } from '@/app/lib/canvasEngine';
 import React, { useRef, useEffect, useState } from 'react';
-
-
+import { postSchema } from '@/ZodSchema';
+import { z } from 'zod';
 const LINE_HEIGHT = 15;
 export type RectangleDrawType = { x: number, y: number, angleInDegrees: number, color: string, width: number }
-export type RectangleStoreType = { x: number, y: number, color: string, width: number }
+export type RectangleStoreType = Extract<z.infer<typeof postSchema>['artform'], { type: 'Canvas' }>['parameters']['users'][number]['lines']
+export type RectangleStoreTypeLine = RectangleStoreType[number]
 export function Canvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [rectangles, setRectangles] = useState<RectangleDrawType[]>([]);
+    const [rectangles, setRectangles] = useState<RectangleStoreType>([]);
+
     const [isDrawing, setIsDrawing] = useState(false);
-    console.log(rectangles);
     // Add mouse event handlers
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const handleMouseDown = () => setIsDrawing(true);
+        const handleMouseDown = () => {
+            setIsDrawing(true);
+            setRectangles(prev => [...prev, []]);
+        };
         const handleMouseUp = () => setIsDrawing(false);
         const handleMouseMove = (event: MouseEvent) => {
             if (!isDrawing) return;
@@ -24,17 +28,19 @@ export function Canvas() {
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
             setRectangles(prev => {
-                if (prev.length === 0) {
-                    return [{
+                const newRectangles = structuredClone(prev);
+                const lastLine = newRectangles[newRectangles.length - 1];
+                if (lastLine.length === 0) {
+                    lastLine.push({
                         x,
                         y,
-                        angleInDegrees: 0,
                         color: 'blue',
                         width: 10
-                    }];
+                    });
+                    return newRectangles;
                 }
 
-                const lastPoint = prev[prev.length - 1];
+                const lastPoint = lastLine[lastLine.length - 1];
                 const distance = Math.sqrt(
                     Math.pow(x - lastPoint.x, 2) +
                     Math.pow(y - lastPoint.y, 2)
@@ -42,15 +48,14 @@ export function Canvas() {
 
                 // Only add point if distance is greater than 5 pixels
                 if (distance > 10) {
-                    return [...prev, {
+                    lastLine.push({
                         x,
                         y,
-                        angleInDegrees: 0,
                         color: 'blue',
                         width: 10
-                    }];
+                    });
                 }
-                return prev;
+                return newRectangles;
             });
         };
 
@@ -97,8 +102,10 @@ export function Canvas() {
         }
         // Clear the canvas before drawing
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const drawRectangles = calculateRectangleDrawType(rectangles);
-        drawRectangles.forEach(drawRotatedRectangle);
+        rectangles.forEach(line => {
+            const drawRectangles = calculateRectangleDrawType(line);
+            drawRectangles.forEach(drawRotatedRectangle);
+        });
         // Draw multiple rectangles with different positions and rotations
         // drawRotatedRectangle({ x: 100, y: 100, angleInDegrees: 20, color: 'blue', width: 10 });
         // drawRotatedRectangle({ x: 200, y: 200, angleInDegrees: 45, color: 'red', width: 10 });

@@ -10,6 +10,8 @@ import { z } from "zod";
 import { newPostSchema } from "./ZodSchema";
 import { clerkClient } from "@clerk/express";
 import { User } from "@prisma/client";
+import { createServer } from "http";
+import { Server } from "socket.io";
 // import { authRequestSchema, authResponseSchema } from "../common/ZodSchema";
 
 const prisma = new PrismaClient();
@@ -234,4 +236,22 @@ app.get("/allPosts", async (req, res) => {
 const PORT = process.env.PORT || 5173;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+  },
+});
+
+// ... existing middleware setup ...
+
+// Add Socket.IO connection handler (add this before your routes)
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
 });

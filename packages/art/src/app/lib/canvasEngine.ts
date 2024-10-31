@@ -1,5 +1,5 @@
 import {
-  RectangleStoreType,
+  RectangleStoreTypeLine,
   RectangleDrawType,
 } from "../components/artforms/Canvas";
 export function calculateAngleFromVertical(
@@ -22,7 +22,7 @@ export function calculateAngleFromVertical(
 }
 
 export function calculateRectangleDrawType(
-  rectangles: RectangleStoreType[]
+  rectangles: RectangleStoreTypeLine
 ): RectangleDrawType[] {
   if (rectangles.length === 1) return [];
   return rectangles.map((rect, index) => {
