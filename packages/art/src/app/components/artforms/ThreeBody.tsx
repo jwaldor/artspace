@@ -4,9 +4,9 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
-import { CoordinatesType } from "@/app/lib/renderengines";
+import { CoordinatesType } from "@/app/lib/conwayStepEngine";
 // import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
-import { threeBodyEngine } from "@/app/lib/renderengines";
+import { threeBodyEngine } from "@/app/lib/conwayStepEngine";
 
 
 export function ThreeBodyMesh() {

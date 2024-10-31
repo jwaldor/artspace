@@ -26,6 +26,26 @@ export const postSchema = z.object({
         live: z.array(z.array(z.boolean())),
       }),
     }),
+    z.object({
+      type: z.literal("Canvas"),
+      parameters: z.object({
+        users: z.array(
+          z.object({
+            userId: z.string(),
+            lines: z.array(
+              z.array(
+                z.object({
+                  x: z.number(),
+                  y: z.number(),
+                  color: z.string(),
+                  width: z.number(),
+                })
+              )
+            ),
+          })
+        ),
+      }),
+    }),
   ]),
 });
 

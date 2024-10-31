@@ -5,6 +5,7 @@ import { ArtContext } from "../services/artService";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import Post from "./components/Post";
 import { useRouter } from "next/navigation";
+import { Canvas } from "./components/artforms/Canvas";
 // import { ThreeBody } from "./components/artforms/ThreeBody";
 
 
@@ -40,7 +41,7 @@ export default function Home() {
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
-          {/* <ThreeBody /> */}
+          <Canvas />
         </div>
       </div>
     </main>
