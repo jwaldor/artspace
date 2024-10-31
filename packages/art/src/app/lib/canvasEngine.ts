@@ -24,10 +24,13 @@ export function calculateAngleFromVertical(
 export function calculateRectangleDrawType(
   rectangles: RectangleStoreType[]
 ): RectangleDrawType[] {
+  if (rectangles.length === 1) return [];
   return rectangles.map((rect, index) => {
     // If this is the last point, use the first point as the next point
     const nextRect =
-      index === rectangles.length - 1 ? rectangles[0] : rectangles[index + 1];
+      index === rectangles.length - 1
+        ? rectangles[index - 1]
+        : rectangles[index + 1];
 
     const angleInDegrees = calculateAngleFromVertical(
       { x: rect.x, y: rect.y },

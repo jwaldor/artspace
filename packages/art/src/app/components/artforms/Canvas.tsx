@@ -2,14 +2,14 @@ import { calculateRectangleDrawType } from '@/app/lib/canvasEngine';
 import React, { useRef, useEffect, useState } from 'react';
 
 
-const LINE_HEIGHT = 10;
+const LINE_HEIGHT = 15;
 export type RectangleDrawType = { x: number, y: number, angleInDegrees: number, color: string, width: number }
 export type RectangleStoreType = { x: number, y: number, color: string, width: number }
 export function Canvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [rectangles, setRectangles] = useState<RectangleDrawType[]>([]);
     const [isDrawing, setIsDrawing] = useState(false);
-
+    console.log(rectangles);
     // Add mouse event handlers
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -23,14 +23,35 @@ export function Canvas() {
             const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
+            setRectangles(prev => {
+                if (prev.length === 0) {
+                    return [{
+                        x,
+                        y,
+                        angleInDegrees: 0,
+                        color: 'blue',
+                        width: 10
+                    }];
+                }
 
-            setRectangles(prev => [...prev, {
-                x,
-                y,
-                angleInDegrees: 0, // You can modify this as needed
-                color: 'blue', // You can modify this as needed
-                width: 10 // You can modify this as needed
-            }]);
+                const lastPoint = prev[prev.length - 1];
+                const distance = Math.sqrt(
+                    Math.pow(x - lastPoint.x, 2) +
+                    Math.pow(y - lastPoint.y, 2)
+                );
+
+                // Only add point if distance is greater than 5 pixels
+                if (distance > 10) {
+                    return [...prev, {
+                        x,
+                        y,
+                        angleInDegrees: 0,
+                        color: 'blue',
+                        width: 10
+                    }];
+                }
+                return prev;
+            });
         };
 
         canvas.addEventListener('mousedown', handleMouseDown);
@@ -74,6 +95,8 @@ export function Canvas() {
             // Restore the canvas state
             ctx.restore();
         }
+        // Clear the canvas before drawing
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         const drawRectangles = calculateRectangleDrawType(rectangles);
         drawRectangles.forEach(drawRotatedRectangle);
         // Draw multiple rectangles with different positions and rotations
