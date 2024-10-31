@@ -241,6 +241,14 @@ export const artFormDefaults: {
       },
     },
   },
+  Canvas: {
+    artform: {
+      type: "Canvas",
+      parameters: {
+        users: [{ userId: "LOCAL_USER", lines: [[]] }],
+      },
+    },
+  },
 };
 
 // export const postSchema = z.object({

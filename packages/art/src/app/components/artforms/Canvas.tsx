@@ -2,7 +2,7 @@ import { calculateRectangleDrawType } from '@/app/lib/canvasEngine';
 import React, { useRef, useEffect, useState } from 'react';
 import { postSchema } from '@/ZodSchema';
 import { z } from 'zod';
-const LINE_HEIGHT = 15;
+const LINE_HEIGHT = 28;
 export type RectangleDrawType = { x: number, y: number, angleInDegrees: number, color: string, width: number }
 export type RectangleStoreType = Extract<z.infer<typeof postSchema>['artform'], { type: 'Canvas' }>['parameters']['users'][number]['lines']
 export type RectangleStoreTypeLine = RectangleStoreType[number]
@@ -47,7 +47,7 @@ export function Canvas() {
                 );
 
                 // Only add point if distance is greater than 5 pixels
-                if (distance > 10) {
+                if (distance > 2) {
                     lastLine.push({
                         x,
                         y,
